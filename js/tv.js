@@ -1,7 +1,7 @@
 // The TV screen. It only shows what every player is allowed to see, and gets
 // everything from the host window on the same laptop.
 
-import { esc, param, keepAwake, pictureHTML, qrSVG, listNames, shortUrl } from "./common.js";
+import { esc, param, keepAwake, pictureHTML, qrSVG, listNames, shortUrl, rulesHTML } from "./common.js";
 import { tvChannel } from "./net.js";
 
 const room = (param("room") || "").toUpperCase();
@@ -45,12 +45,14 @@ const catChip = v => (v.category ? `<div class="tvcat">${esc(v.category.name)}</
 function render() {
   const v = view;
   if (!v) return;
-  const fn = { lobby, pick: v.round ? between : lobby, writing, reading, voting, reveal, scores, final: scores }[v.phase];
+  const fn = { lobby, rules, pick: between, writing, reading, voting, reveal, scores, final: scores }[v.phase];
   app.innerHTML = fn ? fn(v) : "";
 }
 
+const playerChips = v => v.players.map(p => `<span class="tvchip here ${p.connected ? "" : "off"}">${esc(p.name)}</span>`).join("");
+
 function lobby(v) {
-  const chips = v.players.map(p => `<span class="tvchip here ${p.connected ? "" : "off"}">${esc(p.name)}</span>`).join("");
+  const chips = playerChips(v);
   return `<div class="tvbody"><div class="tvlobby">
       <div class="tvqr">${qrSVG(v.joinUrl)}</div>
       <div class="tvjoin"><h1>Lies <span>&amp;</span> Lagers</h1>
@@ -61,8 +63,19 @@ function lobby(v) {
     <div class="tvfoot">${chips || `<p class="tvsub">Waiting for players…</p>`}</div>`;
 }
 
+// Before round 1: how to play, with a small code in the corner for anyone who turns up late.
+function rules(v) {
+  return `${top(v)}<div class="tvbody col tvrulesbody"><div class="tvrules-title">How to play</div>
+      ${rulesHTML("tvrules")}
+      <p class="tvsub"><b>${v.total || 13} rounds</b> · most points wins</p></div>
+    <div class="tvfoot"><div class="tvwait"><div class="tvqr mini">${qrSVG(v.joinUrl)}</div>
+      <p class="tvsub">Just got here? Scan to join: room <b>${esc(v.room)}</b></p></div></div>`;
+}
+
+// Between rounds: the scoreboard (or, before round 1, who's playing) while the host picks a prompt.
 function between(v) {
-  return `${top(v)}<div class="tvbody col"><div class="tvbig">${roundOf(v.round + 1, v)} coming up…</div>${board(v.scores)}</div>
+  const middle = v.round ? board(v.scores) : `<div class="tvchips">${playerChips(v)}</div>`;
+  return `${top(v)}<div class="tvbody col"><div class="tvbig">${roundOf(v.round + 1, v)} coming up…</div>${middle}</div>
     <div class="tvfoot"><div class="tvwait"><div class="tvqr small">${qrSVG(v.joinUrl)}</div>
       <p class="tvsub">New players can join now: room <b>${esc(v.room)}</b></p></div></div>`;
 }

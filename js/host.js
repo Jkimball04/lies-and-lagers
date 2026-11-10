@@ -4,7 +4,7 @@
 
 import {
   esc, param, netMode, pageUrl, joinUrl, storage, keepAwake, pictureHTML, qrSVG, FRIENDS, loadDeck,
-  listNames, cleanName, makeRoomCode, uid, shuffle,
+  listNames, cleanName, makeRoomCode, uid, shuffle, rulesHTML,
 } from "./common.js";
 import { hostNet, tvChannel } from "./net.js";
 
@@ -212,7 +212,7 @@ const voteDone = pid => { const v = S.round.votes[pid]; return !!v && (v.skipped
 const totalRounds = () => S.rounds || GAME_ROUNDS;
 const lastRoundDone = () => S.roundNo >= totalRounds();
 const roundsText = () => `${totalRounds()} round${totalRounds() === 1 ? "" : "s"}`;
-const roundLabel = () => (S.phase === "lobby" ? roundsText()
+const roundLabel = () => (S.phase === "lobby" || S.phase === "rules" ? roundsText()
   : `Round <b>${Math.min(S.phase === "pick" ? S.roundNo + 1 : S.roundNo, totalRounds())}</b> of ${totalRounds()}`);
 
 function toast(msg) {
@@ -434,6 +434,7 @@ function playerView(pid) {
   const inR = !!r && r.inRound.includes(pid);
   switch (S.phase) {
     case "lobby": v.phase = "lobby"; break;
+    case "rules": v.phase = "rules"; break;
     case "pick": v.phase = "between"; break;
     case "writing": case "reading": case "voting":
       if (!inR) { v.phase = r && r.sitOut.includes(pid) ? "sitout" : "late"; break; }
@@ -505,7 +506,7 @@ function tvView() {
 // ---------------------------------------------------------------- drawing the host's screen
 
 const brandHTML = () => `<div class="brand">Lies <span>&amp;</span> Lagers</div>`;
-const STEPS = [["lobby", "Lobby"], ["pick", "Pick a prompt"], ["writing", "Writing"], ["reading", "Reading"],
+const STEPS = [["lobby", "Lobby"], ["rules", "How to play"], ["pick", "Pick a prompt"], ["writing", "Writing"], ["reading", "Reading"],
   ["voting", "Voting"], ["reveal", "Reveal"], ["scores", "Scores"]];
 const NET_LABEL = { online: "● Ready for players", starting: "Starting…", reconnecting: "Reconnecting…",
   "waiting-for-code": "Getting the room ready…" };
@@ -541,7 +542,7 @@ function renderSide() {
 
 function renderMain() {
   if (!S) return;
-  const fn = { lobby: mainLobby, pick: mainPick, writing: mainWriting, reading: mainReading, voting: mainVoting,
+  const fn = { lobby: mainLobby, rules: mainRules, pick: mainPick, writing: mainWriting, reading: mainReading, voting: mainVoting,
     reveal: mainReveal, scores: mainScores, final: mainFinal }[S.phase];
   $("#main").innerHTML = fn();
   if (S.phase === "pick" && ui.draft && ui.draft.image && ui.editCovers) {
@@ -556,12 +557,29 @@ function mainLobby() {
     <ol class="steps-list">
       <li><b>Open the TV screen</b> (button above), drag that window onto the TV and make it full screen.</li>
       <li><b>Players scan the QR code</b> on the TV, or open the link, then type their name.</li>
-      <li>When everyone's in, <b>start the game</b>. People can still join between rounds.</li>
+      <li>When everyone's in, <b>start the game</b>. The TV explains how to play first, and people can still join between rounds.</li>
     </ol>
     <div class="actions"><span class="muted">${n ? `${n} player${n === 1 ? "" : "s"} in` : "Waiting for players…"} · ${roundsText()}</span>
       <button class="btn ghost" data-act="open-tv">Open TV screen</button>
       <button class="btn big" data-act="start-game" ${n ? "" : "disabled"}>Start the game →</button></div>
     ${mode === "local" ? `<p class="small muted">Test mode: players have to be tabs in this same browser.</p>` : ""}</section>`;
+}
+
+// Before round 1: the same five steps the TV and phones show, so the host can talk everyone through them.
+function mainRules() {
+  return `<section class="rules"><h2>How to play <span class="muted small">(showing on the TV now)</span></h2>
+    <p class="muted">Talk everyone through the steps on the TV. Their phones show them too.</p>
+    ${rulesHTML()}
+    <p class="rules-total">${roundsText()}. Most points wins.</p>
+    <div class="panel"><p class="label">Also worth saying</p>
+      <ul class="tips">
+        <li>Picture questions have two parts, like who it is <i>and</i> what they're known for. Answer both.</li>
+        <li>Spelling doesn't matter. Answers never go up on the screen before the vote, and you read them all out in your own words.</li>
+        <li>Anyone who writes the real answer gets a point and skips the vote. You mark it correct while they're writing.</li>
+        <li>Phones only show the answer and vote boxes. Everything else is on the TV.</li>
+      </ul></div>
+    <div class="actions"><button class="btn ghost" data-act="back-lobby">◀ Back to the lobby</button>
+      <button class="btn big" data-act="lets-play">Let's play →</button></div></section>`;
 }
 
 function mainPick() {
@@ -772,7 +790,9 @@ function onClick(e) {
     resume: () => start(ui.saved),
     fresh: () => { storage.del(SAVE_KEY); start(null); },
     "open-tv": openTV,
-    "start-game": () => { S.phase = "pick"; refresh({ views: true }); },
+    "start-game": () => { S.phase = "rules"; refresh({ views: true }); },
+    "lets-play": () => { S.phase = "pick"; refresh({ views: true }); },
+    "back-lobby": () => { S.phase = "lobby"; refresh({ views: true }); },
     cat: () => { ui.cat = d.cat; ui.draft = null; ui.editCovers = false; renderMain(); },
     pick: () => choosePrompt(d.id),
     custom: startCustom,

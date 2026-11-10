@@ -1,7 +1,7 @@
 // A player's phone: join, type an answer, type a vote. It never shows pictures,
 // prompts or anyone else's answers; those are for the TV and the host.
 
-import { esc, param, netMode, storage, session, keepAwake, cleanName, ordinal, listNames, pageUrl } from "./common.js";
+import { esc, param, netMode, storage, session, keepAwake, cleanName, ordinal, listNames, pageUrl, rulesHTML } from "./common.js";
 import { clientNet } from "./net.js";
 
 const mode = netMode();
@@ -126,6 +126,8 @@ function body(v) {
   switch (v.phase) {
     case "lobby":
       return `<p class="phbig">You're in, ${esc(name)}! 🍺</p><p class="muted">Keep an eye on the TV. The game starts when the host is ready.</p>`;
+    case "rules":
+      return `<p class="phbig">How to play</p>${rulesHTML()}<p class="muted">${v.total || 13} rounds. Most points wins.</p>`;
     case "between":
       return `<p class="phbig">${v.round ? `Round ${v.round + 1}${v.total ? ` of ${v.total}` : ""} is coming up` : "Get ready!"}</p><p class="muted">Eyes on the TV.</p>${v.round ? standing(v) : ""}`;
     case "late":

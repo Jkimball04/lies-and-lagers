@@ -38,7 +38,8 @@ function lost() {
 }
 
 const brand = `<div class="tvbrand">Lies <span>&amp;</span> Lagers</div>`;
-const top = (v, mid = "") => `<div class="tvtop">${brand}${mid}<div class="tvround">${v.round ? "Round " + v.round : ""}</div></div>`;
+const roundOf = (n, v) => `Round ${n}${v.total ? ` of ${v.total}` : ""}`;
+const top = (v, mid = "") => `<div class="tvtop">${brand}${mid}<div class="tvround">${v.round ? roundOf(v.round, v) : ""}</div></div>`;
 const catChip = v => (v.category ? `<div class="tvcat">${esc(v.category.name)}</div>` : "");
 
 function render() {
@@ -61,7 +62,7 @@ function lobby(v) {
 }
 
 function between(v) {
-  return `${top(v)}<div class="tvbody col"><div class="tvbig">Round ${v.round + 1} coming up…</div>${board(v.scores)}</div>
+  return `${top(v)}<div class="tvbody col"><div class="tvbig">${roundOf(v.round + 1, v)} coming up…</div>${board(v.scores)}</div>
     <div class="tvfoot"><div class="tvwait"><div class="tvqr small">${qrSVG(v.joinUrl)}</div>
       <p class="tvsub">New players can join now: room <b>${esc(v.room)}</b></p></div></div>`;
 }

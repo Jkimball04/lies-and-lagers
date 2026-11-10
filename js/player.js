@@ -127,7 +127,7 @@ function body(v) {
     case "lobby":
       return `<p class="phbig">You're in, ${esc(name)}! 🍺</p><p class="muted">Keep an eye on the TV. The game starts when the host is ready.</p>`;
     case "between":
-      return `<p class="phbig">${v.round ? `Round ${v.round + 1} is coming up` : "Get ready!"}</p><p class="muted">Eyes on the TV.</p>${v.round ? standing(v) : ""}`;
+      return `<p class="phbig">${v.round ? `Round ${v.round + 1}${v.total ? ` of ${v.total}` : ""} is coming up` : "Get ready!"}</p><p class="muted">Eyes on the TV.</p>${v.round ? standing(v) : ""}`;
     case "late":
       return `<p class="phbig">You're in from the next round</p><p class="muted">This round started before you joined. Sit tight!</p>`;
     case "sitout":

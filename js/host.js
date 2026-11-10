@@ -12,6 +12,7 @@ const mode = netMode();
 const $ = s => document.querySelector(s);
 const SAVE_KEY = "ll-host";
 const MAX_PLAYERS = 16;
+const GAME_ROUNDS = 13; // rounds in a game (a ?rounds= web address setting overrides it, e.g. for a quick test)
 const ACTIVE = ["writing", "reading", "voting"];
 
 let deck = null, cats = [], catById = {};
@@ -42,7 +43,8 @@ async function init() {
 }
 
 function newState() {
-  return { v: 1, mode, room: makeRoomCode(), phase: "lobby", players: {}, order: [], round: null, roundNo: 0, used: [], updated: Date.now() };
+  const rounds = Math.max(1, Math.min(50, Number(param("rounds")) || GAME_ROUNDS));
+  return { v: 1, mode, room: makeRoomCode(), phase: "lobby", players: {}, order: [], round: null, roundNo: 0, rounds, used: [], updated: Date.now() };
 }
 
 function showResume(saved) {
@@ -207,6 +209,11 @@ const isVoter = pid => { const r = S.round; return !!r && r.inRound.includes(pid
 const voters = () => S.round.inRound.filter(isVoter);
 const votersFor = id => Object.keys(S.round.votes).filter(pid => S.round.votes[pid].target === id && !S.round.votes[pid].skipped);
 const voteDone = pid => { const v = S.round.votes[pid]; return !!v && (v.skipped || (v.submitted && !!v.target)); };
+const totalRounds = () => S.rounds || GAME_ROUNDS;
+const lastRoundDone = () => S.roundNo >= totalRounds();
+const roundsText = () => `${totalRounds()} round${totalRounds() === 1 ? "" : "s"}`;
+const roundLabel = () => (S.phase === "lobby" ? roundsText()
+  : `Round <b>${Math.min(S.phase === "pick" ? S.roundNo + 1 : S.roundNo, totalRounds())}</b> of ${totalRounds()}`);
 
 function toast(msg) {
   const t = $("#toast");
@@ -378,7 +385,11 @@ function nextRound() {
 }
 
 function endGame() {
-  if (!confirm("End the game and show the final scores?")) return;
+  if (!confirm("End the game early and show the final scores?")) return;
+  finishGame();
+}
+
+function finishGame() {
   S.phase = "final";
   S.round = null;
   refresh({ views: true });
@@ -417,7 +428,8 @@ function openTV() {
 
 function playerView(pid) {
   const p = S.players[pid], r = S.round;
-  const v = { phase: "lobby", round: S.roundNo, name: p.name, score: p.score, rank: ranking().indexOf(pid) + 1, players: S.order.length };
+  const v = { phase: "lobby", round: S.roundNo, total: totalRounds(), name: p.name, score: p.score,
+    rank: ranking().indexOf(pid) + 1, players: S.order.length };
   if (r) v.category = catName(r.prompt.category);
   const inR = !!r && r.inRound.includes(pid);
   switch (S.phase) {
@@ -460,7 +472,7 @@ function resultFor(pid) {
 function tvView() {
   const r = S.round;
   const view = {
-    room: S.room, joinUrl: joinUrl(S.room), phase: S.phase, round: S.roundNo,
+    room: S.room, joinUrl: joinUrl(S.room), phase: S.phase, round: S.roundNo, total: totalRounds(),
     players: S.order.map(pid => ({ name: nameOf(pid), connected: S.players[pid].connected })),
   };
   if (r && ["writing", "reading", "voting", "reveal"].includes(S.phase)) {
@@ -505,6 +517,7 @@ function renderHeader() {
   const key = S.phase === "final" ? "scores" : S.phase;
   $("#hdr").innerHTML = `${brandHTML()}
     <div class="steps">${STEPS.map(([k, l]) => `<span class="${k === key ? "on" : ""}">${l}</span>`).join("")}</div>
+    <div class="roomcode">${roundLabel()}</div>
     <div class="roomcode">Room <b>${esc(S.room)}</b></div>
     <div class="netstat ${esc(ui.netStatus)}">${esc(NET_LABEL[ui.netStatus] || ui.netStatus)}${mode === "local" ? " · test mode" : ""}</div>
     <button class="btn small ghost" data-act="open-tv">Open TV screen</button>`;
@@ -545,7 +558,7 @@ function mainLobby() {
       <li><b>Players scan the QR code</b> on the TV, or open the link, then type their name.</li>
       <li>When everyone's in, <b>start the game</b>. People can still join between rounds.</li>
     </ol>
-    <div class="actions"><span class="muted">${n ? `${n} player${n === 1 ? "" : "s"} in` : "Waiting for players…"}</span>
+    <div class="actions"><span class="muted">${n ? `${n} player${n === 1 ? "" : "s"} in` : "Waiting for players…"} · ${roundsText()}</span>
       <button class="btn ghost" data-act="open-tv">Open TV screen</button>
       <button class="btn big" data-act="start-game" ${n ? "" : "disabled"}>Start the game →</button></div>
     ${mode === "local" ? `<p class="small muted">Test mode: players have to be tabs in this same browser.</p>` : ""}</section>`;
@@ -567,7 +580,7 @@ function mainPick() {
     ? `<div class="panel"><p class="muted">You make these up yourself. Get the true answer from the person in secret first; they sit the round out.</p>
        <button class="btn small" data-act="custom">✎ Make one now</button></div>`
     : `<p class="muted">No prompts in this category yet.</p>`;
-  return `<section class="pick"><div class="pick-head"><h2>Round ${S.roundNo + 1}: pick a prompt</h2>
+  return `<section class="pick"><div class="pick-head"><h2>Round ${S.roundNo + 1} of ${totalRounds()}: pick a prompt</h2>
       <button class="btn small ghost" data-act="custom">✎ Make your own</button></div>
     <div class="chips">${chips}</div>
     <div class="pick-body"><div class="prompt-list">${cards || empty}</div>
@@ -725,17 +738,22 @@ function mainReveal() {
   return `<section class="reveal"><h2>Round ${r.n} results <span class="muted small">(showing on the TV)</span></h2>
     <ol class="answers">${rows}</ol>
     <h3>Points this round</h3><ul class="pts">${pts || `<li class="muted">Nobody scored this round</li>`}</ul>
-    <div class="actions"><button class="btn ghost" data-act="show-scores">Show the scoreboard on the TV</button>
-      <button class="btn big" data-act="next-round">Next round →</button></div></section>`;
+    <div class="actions">${lastRoundDone()
+      ? `<span class="muted">That was the last round!</span>
+        <button class="btn big" data-act="finish">See the final scores →</button>`
+      : `<button class="btn ghost" data-act="show-scores">Show the scoreboard on the TV</button>
+        <button class="btn big" data-act="next-round">Next round →</button>`}</div></section>`;
 }
 
 const scoreboardHTML = () => `<ol class="board">${ranking().map((pid, i) =>
   `<li><span>${i + 1}. ${esc(nameOf(pid))}</span><b>${S.players[pid].score}</b></li>`).join("")}</ol>`;
 
 function mainScores() {
-  return `<section><h2>Scores after round ${S.roundNo}</h2>${scoreboardHTML()}
-    <div class="actions"><button class="btn ghost" data-act="end-game">End the game</button>
-      <button class="btn big" data-act="next-round">Next round →</button></div></section>`;
+  return `<section><h2>Scores after round ${S.roundNo} of ${totalRounds()}</h2>${scoreboardHTML()}
+    <div class="actions">${lastRoundDone()
+      ? `<button class="btn big" data-act="finish">See the final scores →</button>`
+      : `<button class="btn ghost" data-act="end-game">End the game early</button>
+        <button class="btn big" data-act="next-round">Next round →</button>`}</div></section>`;
 }
 
 function mainFinal() {
@@ -780,6 +798,7 @@ function onClick(e) {
     "show-scores": () => { S.phase = "scores"; refresh({ views: true }); },
     "next-round": nextRound,
     "end-game": endGame,
+    finish: finishGame,
     "play-again": playAgain,
     remove: () => removePlayer(d.pid),
   };

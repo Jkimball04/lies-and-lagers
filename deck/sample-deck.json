@@ -1,0 +1,1258 @@
+{
+ "name": "Lies & Lagers sample deck",
+ "built": "2026-11-10",
+ "seed": 20261109,
+ "categories": [
+  {
+   "id": "inventors",
+   "name": "Inventors",
+   "type": "picture",
+   "question": "Who is this, and what did they invent?"
+  },
+  {
+   "id": "bands",
+   "name": "Bands",
+   "type": "picture",
+   "question": "Who is this band, and what's their big hit?"
+  },
+  {
+   "id": "saints",
+   "name": "Patron Saints",
+   "type": "picture",
+   "question": "Which saint is this, and what are they the patron saint of?"
+  },
+  {
+   "id": "royals",
+   "name": "Royal Nicknames",
+   "type": "picture",
+   "question": "Who is this ruler, and what was their nickname?"
+  },
+  {
+   "id": "creatures",
+   "name": "Strange Creatures",
+   "type": "picture",
+   "question": "What is this animal, and what's weird about it?"
+  },
+  {
+   "id": "objects",
+   "name": "Mystery Objects",
+   "type": "picture",
+   "question": "What was this used for?"
+  },
+  {
+   "id": "posters",
+   "name": "Old Movie Posters",
+   "type": "picture",
+   "question": "What's this movie about?"
+  },
+  {
+   "id": "words",
+   "name": "Weird Words",
+   "type": "text",
+   "question": ""
+  },
+  {
+   "id": "acronyms",
+   "name": "Acronyms",
+   "type": "text",
+   "question": ""
+  },
+  {
+   "id": "laws",
+   "name": "Weird Laws",
+   "type": "text",
+   "question": ""
+  },
+  {
+   "id": "films",
+   "name": "Movie Plots",
+   "type": "text",
+   "question": ""
+  },
+  {
+   "id": "people",
+   "name": "Who Was…?",
+   "type": "text",
+   "question": ""
+  },
+  {
+   "id": "jobs",
+   "name": "Odd Old Jobs",
+   "type": "text",
+   "question": ""
+  },
+  {
+   "id": "phobias",
+   "name": "Phobias",
+   "type": "text",
+   "question": ""
+  },
+  {
+   "id": "groups",
+   "name": "Group Names",
+   "type": "text",
+   "question": ""
+  },
+  {
+   "id": "sayings",
+   "name": "Foreign Sayings",
+   "type": "text",
+   "question": ""
+  },
+  {
+   "id": "sports",
+   "name": "Odd Sports & Festivals",
+   "type": "text",
+   "question": ""
+  },
+  {
+   "id": "places",
+   "name": "Strange Place Names",
+   "type": "text",
+   "question": ""
+  }
+ ],
+ "prompts": [
+  {
+   "id": "inventors-3",
+   "category": "inventors",
+   "prompt": "Who is this, and what did they invent?",
+   "answer": "Igor Sikorsky, a helicopter pioneer who also built the world's first four-engine plane",
+   "place": "Russia / USA",
+   "region": "Europe",
+   "era": "20th",
+   "source": {
+    "title": "Igor Sikorsky",
+    "url": "https://en.wikipedia.org/wiki/Igor_Sikorsky"
+   },
+   "draw": {
+    "list": "List of inventors",
+    "rank": 3,
+    "seed": "20261109:inventors"
+   },
+   "image": {
+    "file": "Sikorsky,_Igor.jpg",
+    "width": 504,
+    "height": 675,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Sikorsky%2C_Igor.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "covers": [],
+    "credit": "SDASM Archives",
+    "license": "Public domain",
+    "license_url": "",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Sikorsky,_Igor.jpg"
+   }
+  },
+  {
+   "id": "inventors-12",
+   "category": "inventors",
+   "prompt": "Who is this, and what did they invent?",
+   "answer": "Archibald Low, who built the first powered drone",
+   "place": "UK",
+   "region": "Europe",
+   "era": "20th",
+   "source": {
+    "title": "Archibald Low",
+    "url": "https://en.wikipedia.org/wiki/Archibald_Low"
+   },
+   "draw": {
+    "list": "List of inventors",
+    "rank": 12,
+    "seed": "20261109:inventors"
+   },
+   "image": {
+    "file": "Archibal-Low.jpg",
+    "width": 520,
+    "height": 450,
+    "url": "https://upload.wikimedia.org/wikipedia/en/d/d0/Archibal-Low.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "covers": [],
+    "credit": "Unknown",
+    "license": "PD-US",
+    "license_url": "",
+    "file_page": "https://en.wikipedia.org/wiki/File:Archibal-Low.jpg"
+   }
+  },
+  {
+   "id": "inventors-22",
+   "category": "inventors",
+   "prompt": "Who is this, and what did they invent?",
+   "answer": "Rudolf Hell, who invented the Hellschreiber, an early fax-like teleprinter",
+   "place": "Germany",
+   "region": "Europe",
+   "era": "20th",
+   "source": {
+    "title": "Rudolf Hell",
+    "url": "https://en.wikipedia.org/wiki/Rudolf_Hell"
+   },
+   "draw": {
+    "list": "List of inventors",
+    "rank": 22,
+    "seed": "20261109:inventors"
+   },
+   "image": {
+    "file": "Rudolf_Hell_führt_seinen_Wetterkartenschreiber_vor_(Kiel_44.592).jpg",
+    "width": 859,
+    "height": 863,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/32/Rudolf_Hell_f%C3%BChrt_seinen_Wetterkartenschreiber_vor_%28Kiel_44.592%29.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "covers": [],
+    "credit": "Magnussen, Friedrich (1914-1987)",
+    "license": "CC BY-SA 3.0 de",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Rudolf_Hell_f%C3%BChrt_seinen_Wetterkartenschreiber_vor_(Kiel_44.592).jpg"
+   }
+  },
+  {
+   "id": "bands-12",
+   "category": "bands",
+   "prompt": "Who is this band, and what's their big hit?",
+   "answer": "Santo & Johnny, with “Sleep Walk”",
+   "place": "USA",
+   "region": "North America",
+   "era": "20th",
+   "source": {
+    "title": "Santo & Johnny",
+    "url": "https://en.wikipedia.org/wiki/Santo_%26_Johnny"
+   },
+   "draw": {
+    "list": "List of one-hit wonders in the United States",
+    "rank": 12,
+    "seed": "20261109:bands"
+   },
+   "image": {
+    "file": "Santo_&_Johnny.jpg",
+    "width": 640,
+    "height": 460,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Santo_%26_Johnny.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "covers": [],
+    "credit": "Unknown author",
+    "license": "Public domain",
+    "license_url": "",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Santo_%26_Johnny.jpg"
+   }
+  },
+  {
+   "id": "bands-13",
+   "category": "bands",
+   "prompt": "Who is this band, and what's their big hit?",
+   "answer": "Lasgo, with “Something”",
+   "place": "Belgium",
+   "region": "Europe",
+   "era": "21st",
+   "source": {
+    "title": "Lasgo",
+    "url": "https://en.wikipedia.org/wiki/Lasgo"
+   },
+   "draw": {
+    "list": "List of one-hit wonders in the United States",
+    "rank": 13,
+    "seed": "20261109:bands"
+   },
+   "image": {
+    "file": "Lasgo-1630946009.JPG",
+    "width": 449,
+    "height": 600,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/21/Lasgo-1630946009.JPG?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "covers": [],
+    "credit": "Unknown author",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Lasgo-1630946009.JPG"
+   }
+  },
+  {
+   "id": "bands-25",
+   "category": "bands",
+   "prompt": "Who is this band, and what's their big hit?",
+   "answer": "Brian and Michael, with “Matchstalk Men and Matchstalk Cats and Dogs”",
+   "place": "UK",
+   "region": "Europe",
+   "era": "20th",
+   "source": {
+    "title": "Brian and Michael",
+    "url": "https://en.wikipedia.org/wiki/Brian_and_Michael"
+   },
+   "draw": {
+    "list": "List of one-hit wonders on the UK singles chart",
+    "rank": 25,
+    "seed": "20261109:bands"
+   },
+   "image": {
+    "file": "Kevin_&_Mick.jpg",
+    "width": 1280,
+    "height": 960,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Kevin_%26_Mick.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "covers": [],
+    "credit": "Red Lexus",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Kevin_%26_Mick.jpg"
+   }
+  },
+  {
+   "id": "saints-2",
+   "category": "saints",
+   "prompt": "Which saint is this, and what are they the patron saint of?",
+   "answer": "St. Raymond Nonnatus, patron saint of midwives (he was delivered by caesarean section)",
+   "place": "Spain",
+   "region": "Europe",
+   "era": "13th",
+   "source": {
+    "title": "Raymond Nonnatus",
+    "url": "https://en.wikipedia.org/wiki/Raymond_Nonnatus"
+   },
+   "draw": {
+    "list": "List of patron saints by occupation and activity",
+    "rank": 2,
+    "seed": "20261109:saints"
+   },
+   "image": {
+    "file": "San_Ramón_Nonato_(Museo_Ibercaja_Camón_Aznar).jpg",
+    "width": 595,
+    "height": 1000,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/e/e1/San_Ram%C3%B3n_Nonato_%28Museo_Ibercaja_Cam%C3%B3n_Aznar%29.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "covers": [],
+    "credit": "Antonio del Castillo y Saavedra",
+    "license": "Public domain",
+    "license_url": "",
+    "file_page": "https://commons.wikimedia.org/wiki/File:San_Ram%C3%B3n_Nonato_(Museo_Ibercaja_Cam%C3%B3n_Aznar).jpg"
+   }
+  },
+  {
+   "id": "saints-5",
+   "category": "saints",
+   "prompt": "Which saint is this, and what are they the patron saint of?",
+   "answer": "St. Theobald of Provins, patron saint of charcoal burners",
+   "place": "France",
+   "region": "Europe",
+   "era": "11th",
+   "source": {
+    "title": "Theobald of Provins",
+    "url": "https://en.wikipedia.org/wiki/Theobald_of_Provins"
+   },
+   "draw": {
+    "list": "List of patron saints by occupation and activity",
+    "rank": 5,
+    "seed": "20261109:saints"
+   },
+   "image": {
+    "file": "Joigny_-_Eglise_Saint-Thilbault_-_statue_de_Juan_de_Juni.jpg",
+    "width": 1280,
+    "height": 1153,
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Joigny_-_Eglise_Saint-Thilbault_-_statue_de_Juan_de_Juni.jpg/1280px-Joigny_-_Eglise_Saint-Thilbault_-_statue_de_Juan_de_Juni.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "covers": [],
+    "credit": "Christophe.Finot",
+    "license": "CC BY-SA 2.5",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.5",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Joigny_-_Eglise_Saint-Thilbault_-_statue_de_Juan_de_Juni.jpg"
+   }
+  },
+  {
+   "id": "saints-10",
+   "category": "saints",
+   "prompt": "Which saint is this, and what are they the patron saint of?",
+   "answer": "St. Phanourios, patron saint of lost things",
+   "place": "Greece",
+   "region": "Europe",
+   "era": "16th",
+   "source": {
+    "title": "Phanourios the Newly-Revealed",
+    "url": "https://en.wikipedia.org/wiki/Phanourios_the_Newly-Revealed"
+   },
+   "draw": {
+    "list": "List of patron saints by occupation and activity",
+    "rank": 10,
+    "seed": "20261109:saints"
+   },
+   "image": {
+    "file": "Άγγελος_Ακοτάντος_-_Άγιος_Φανούριος_7660.jpg",
+    "width": 1280,
+    "height": 1712,
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/%CE%86%CE%B3%CE%B3%CE%B5%CE%BB%CE%BF%CF%82_%CE%91%CE%BA%CE%BF%CF%84%CE%AC%CE%BD%CF%84%CE%BF%CF%82_-_%CE%86%CE%B3%CE%B9%CE%BF%CF%82_%CE%A6%CE%B1%CE%BD%CE%BF%CF%8D%CF%81%CE%B9%CE%BF%CF%82_7660.jpg/1280px-%CE%86%CE%B3%CE%B3%CE%B5%CE%BB%CE%BF%CF%82_%CE%91%CE%BA%CE%BF%CF%84%CE%AC%CE%BD%CF%84%CE%BF%CF%82_-_%CE%86%CE%B3%CE%B9%CE%BF%CF%82_%CE%A6%CE%B1%CE%BD%CE%BF%CF%8D%CF%81%CE%B9%CE%BF%CF%82_7660.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "covers": [],
+    "credit": "Angelos Akotantos",
+    "license": "Public domain",
+    "license_url": "",
+    "file_page": "https://commons.wikimedia.org/wiki/File:%CE%86%CE%B3%CE%B3%CE%B5%CE%BB%CE%BF%CF%82_%CE%91%CE%BA%CE%BF%CF%84%CE%AC%CE%BD%CF%84%CE%BF%CF%82_-_%CE%86%CE%B3%CE%B9%CE%BF%CF%82_%CE%A6%CE%B1%CE%BD%CE%BF%CF%8D%CF%81%CE%B9%CE%BF%CF%82_7660.jpg"
+   }
+  },
+  {
+   "id": "royals-2",
+   "category": "royals",
+   "prompt": "Who is this ruler, and what was their nickname?",
+   "answer": "King Denis of Portugal, “the Farmer King”",
+   "place": "Portugal",
+   "region": "Europe",
+   "era": "13th",
+   "source": {
+    "title": "Denis of Portugal",
+    "url": "https://en.wikipedia.org/wiki/Denis_of_Portugal"
+   },
+   "draw": {
+    "list": "List of monarchs by nickname",
+    "rank": 2,
+    "seed": "20261109:royals"
+   },
+   "image": {
+    "file": "D._Dinis_-_Compendio_de_crónicas_de_reyes_(Biblioteca_Nacional_de_España).png",
+    "width": 900,
+    "height": 1432,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/aa/D._Dinis_-_Compendio_de_cr%C3%B3nicas_de_reyes_%28Biblioteca_Nacional_de_Espa%C3%B1a%29.png?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "covers": [],
+    "credit": "Unknown author",
+    "license": "Public domain",
+    "license_url": "",
+    "file_page": "https://commons.wikimedia.org/wiki/File:D._Dinis_-_Compendio_de_cr%C3%B3nicas_de_reyes_(Biblioteca_Nacional_de_Espa%C3%B1a).png"
+   }
+  },
+  {
+   "id": "royals-13",
+   "category": "royals",
+   "prompt": "Who is this ruler, and what was their nickname?",
+   "answer": "Emperor Menelik II of Ethiopia, affectionately called “Mother Menelik”",
+   "place": "Ethiopia",
+   "region": "Africa",
+   "era": "19th",
+   "source": {
+    "title": "Menelik II",
+    "url": "https://en.wikipedia.org/wiki/Menelik_II"
+   },
+   "draw": {
+    "list": "List of monarchs by nickname",
+    "rank": 13,
+    "seed": "20261109:royals"
+   },
+   "image": {
+    "file": "Menelik_II_in_coronation_garb,_Emperor_of_Ethiopia.jpg",
+    "width": 1280,
+    "height": 1595,
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Menelik_II_in_coronation_garb%2C_Emperor_of_Ethiopia.jpg/1280px-Menelik_II_in_coronation_garb%2C_Emperor_of_Ethiopia.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "covers": [],
+    "credit": "Unknown author",
+    "license": "Public domain",
+    "license_url": "",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Menelik_II_in_coronation_garb,_Emperor_of_Ethiopia.jpg"
+   }
+  },
+  {
+   "id": "creatures-9",
+   "category": "creatures",
+   "prompt": "What is this animal, and what's weird about it?",
+   "answer": "The yellow fly of the Dismal Swamp, a fiercely biting horse-fly",
+   "place": "USA & Central America",
+   "region": "North America",
+   "era": "today",
+   "source": {
+    "title": "Diachlorus ferrugatus",
+    "url": "https://en.wikipedia.org/wiki/Diachlorus_ferrugatus"
+   },
+   "draw": {
+    "list": "List of unusual biological names",
+    "rank": 9,
+    "seed": "20261109:creatures"
+   },
+   "image": {
+    "file": "Diachlorusferrugatuscostarica.png",
+    "width": 488,
+    "height": 480,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Diachlorusferrugatuscostarica.png?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "covers": [],
+    "credit": "MA Zumbado, INBio",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Diachlorusferrugatuscostarica.png"
+   }
+  },
+  {
+   "id": "creatures-15",
+   "category": "creatures",
+   "prompt": "What is this animal, and what's weird about it?",
+   "answer": "Dinosaurus, which despite its name isn't a dinosaur at all; it's a distant relative of mammals",
+   "place": "Russia",
+   "region": "Europe",
+   "era": "prehistoric",
+   "source": {
+    "title": "Dinosaurus",
+    "url": "https://en.wikipedia.org/wiki/Dinosaurus"
+   },
+   "draw": {
+    "list": "List of unusual biological names",
+    "rank": 15,
+    "seed": "20261109:creatures"
+   },
+   "image": {
+    "file": "Dinosaurus_murchisonii.png",
+    "width": 1280,
+    "height": 853,
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Dinosaurus_murchisonii.png/1280px-Dinosaurus_murchisonii.png?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "covers": [],
+    "credit": "A. C. Tatarinov",
+    "license": "CC0",
+    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Dinosaurus_murchisonii.png"
+   }
+  },
+  {
+   "id": "creatures-31",
+   "category": "creatures",
+   "prompt": "What is this animal, and what's weird about it?",
+   "answer": "The opah, the only fish known to keep its whole body warm",
+   "place": "Oceans worldwide",
+   "region": "Worldwide",
+   "era": "today",
+   "source": {
+    "title": "Opah",
+    "url": "https://en.wikipedia.org/wiki/Opah"
+   },
+   "draw": {
+    "list": "List of fish by common name",
+    "rank": 31,
+    "seed": "20261109:creatures"
+   },
+   "image": {
+    "file": "Moonfish_600.jpg",
+    "width": 600,
+    "height": 384,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Moonfish_600.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "covers": [],
+    "credit": "Unknown",
+    "license": "Public domain",
+    "license_url": "",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Moonfish_600.jpg"
+   }
+  },
+  {
+   "id": "objects-4",
+   "category": "objects",
+   "prompt": "What was this used for?",
+   "answer": "Stretching the fingers of tight gloves so they'd go on without tearing",
+   "place": "UK",
+   "region": "Europe",
+   "era": "19th",
+   "source": {
+    "title": "Glove stretcher",
+    "url": "https://en.wikipedia.org/wiki/Glove_stretcher"
+   },
+   "draw": {
+    "list": "Category:Domestic implements",
+    "rank": 4,
+    "seed": "20261109:objects"
+   },
+   "image": {
+    "file": "Stretcher,_glove_(AM_2005.87.10-1).jpg",
+    "width": 1280,
+    "height": 902,
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Stretcher%2C_glove_%28AM_2005.87.10-1%29.jpg/1280px-Stretcher%2C_glove_%28AM_2005.87.10-1%29.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "covers": [],
+    "credit": "Unknown author",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Stretcher,_glove_(AM_2005.87.10-1).jpg"
+   }
+  },
+  {
+   "id": "objects-6",
+   "category": "objects",
+   "prompt": "What was this used for?",
+   "answer": "Tossing grain in the air so the breeze blows away the husks",
+   "place": "Japan",
+   "region": "Asia",
+   "era": "traditional",
+   "source": {
+    "title": "Winnowing basket",
+    "url": "https://en.wikipedia.org/wiki/Winnowing_basket"
+   },
+   "draw": {
+    "list": "Category:Domestic implements",
+    "rank": 6,
+    "seed": "20261109:objects"
+   },
+   "image": {
+    "file": "Mi,_Japanese_winnow.jpg",
+    "width": 1280,
+    "height": 960,
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Mi%2C_Japanese_winnow.jpg/1280px-Mi%2C_Japanese_winnow.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "covers": [],
+    "credit": "Lombroso",
+    "license": "Public domain",
+    "license_url": "",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Mi,_Japanese_winnow.jpg"
+   }
+  },
+  {
+   "id": "objects-30",
+   "category": "objects",
+   "prompt": "What was this used for?",
+   "answer": "Storing bread and kneading dough; it's an Italian bread cupboard",
+   "place": "Italy",
+   "region": "Europe",
+   "era": "16th",
+   "source": {
+    "title": "Madia (furniture)",
+    "url": "https://en.wikipedia.org/wiki/Madia_(furniture)"
+   },
+   "draw": {
+    "list": "Category:Domestic implements",
+    "rank": 30,
+    "seed": "20261109:objects"
+   },
+   "image": {
+    "file": "AD-Madia.jpg",
+    "width": 1280,
+    "height": 2560,
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/AD-Madia.jpg/1280px-AD-Madia.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "covers": [],
+    "credit": "Anto500",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "file_page": "https://commons.wikimedia.org/wiki/File:AD-Madia.jpg"
+   }
+  },
+  {
+   "id": "posters-5",
+   "category": "posters",
+   "prompt": "What's this movie about?",
+   "answer": "A sharpshooting cowboy goes undercover at a crooked rodeo where riders keep dying of “snakebite”",
+   "place": "USA",
+   "region": "North America",
+   "era": "20th",
+   "source": {
+    "title": "The Man from Utah",
+    "url": "https://en.wikipedia.org/wiki/The_Man_from_Utah"
+   },
+   "draw": {
+    "list": "List of films in the public domain in the United States",
+    "rank": 5,
+    "seed": "20261109:posters"
+   },
+   "image": {
+    "file": "Man_From_Utah_poster.jpg",
+    "width": 1280,
+    "height": 1938,
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Man_From_Utah_poster.jpg/1280px-Man_From_Utah_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "covers": [
+     {
+      "x": 0.065,
+      "y": 0.72,
+      "w": 0.35,
+      "h": 0.135
+     }
+    ],
+    "credit": "Monogram",
+    "license": "Public domain",
+    "license_url": "",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Man_From_Utah_poster.jpg"
+   }
+  },
+  {
+   "id": "posters-15",
+   "category": "posters",
+   "prompt": "What's this movie about?",
+   "answer": "Two friends inherit a battered yacht, get shipwrecked on an uncharted island, and start their own tax-free country",
+   "place": "France / Italy",
+   "region": "Europe",
+   "era": "20th",
+   "source": {
+    "title": "Atoll K",
+    "url": "https://en.wikipedia.org/wiki/Atoll_K"
+   },
+   "draw": {
+    "list": "List of films in the public domain in the United States",
+    "rank": 15,
+    "seed": "20261109:posters"
+   },
+   "image": {
+    "file": "Utopia_(1954),_film_poster_2.jpg",
+    "width": 1280,
+    "height": 1001,
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Utopia_%281954%29%2C_film_poster_2.jpg/1280px-Utopia_%281954%29%2C_film_poster_2.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "covers": [
+     {
+      "x": 0.495,
+      "y": 0.765,
+      "w": 0.235,
+      "h": 0.15
+     }
+    ],
+    "credit": "Thru Explotations Productions Inc.",
+    "license": "Public domain",
+    "license_url": "",
+    "file_page": "https://commons.wikimedia.org/wiki/File:Utopia_(1954),_film_poster_2.jpg"
+   }
+  },
+  {
+   "id": "words-3",
+   "category": "words",
+   "prompt": "What does “glidder” mean?",
+   "answer": "To slide or slip",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "glidder",
+    "url": "https://en.wiktionary.org/wiki/glidder"
+   },
+   "draw": {
+    "list": "Category:English obsolete terms",
+    "rank": 3,
+    "seed": "20261109:words"
+   }
+  },
+  {
+   "id": "words-8",
+   "category": "words",
+   "prompt": "What does “evagation” mean?",
+   "answer": "A wandering about; a rambling trip",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "evagation",
+    "url": "https://en.wiktionary.org/wiki/evagation"
+   },
+   "draw": {
+    "list": "Category:English archaic terms",
+    "rank": 8,
+    "seed": "20261109:words"
+   }
+  },
+  {
+   "id": "words-11",
+   "category": "words",
+   "prompt": "What does “walm” mean?",
+   "answer": "To boil up, rolling and bubbling like boiling water",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "walm",
+    "url": "https://en.wiktionary.org/wiki/walm"
+   },
+   "draw": {
+    "list": "Category:English obsolete terms",
+    "rank": 11,
+    "seed": "20261109:words"
+   }
+  },
+  {
+   "id": "acronyms-12",
+   "category": "acronyms",
+   "prompt": "What does TANJ stand for?",
+   "answer": "“There Ain't No Justice” (a curse word in the Ringworld sci-fi novels)",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "List of acronyms: T",
+    "url": "https://en.wikipedia.org/wiki/List_of_acronyms%3A_T"
+   },
+   "draw": {
+    "list": "List of acronyms: T",
+    "rank": 12,
+    "seed": "20261109:acronyms"
+   }
+  },
+  {
+   "id": "acronyms-17",
+   "category": "acronyms",
+   "prompt": "What does JEDI stand for?",
+   "answer": "Joint Enterprise Defense Infrastructure (a US military cloud-computing contract)",
+   "place": "USA",
+   "region": "North America",
+   "era": "21st",
+   "source": {
+    "title": "JEDI",
+    "url": "https://en.wiktionary.org/wiki/JEDI"
+   },
+   "draw": {
+    "list": "Category:English acronyms (Wiktionary)",
+    "rank": 17,
+    "seed": "20261109:acronyms"
+   }
+  },
+  {
+   "id": "acronyms-28",
+   "category": "acronyms",
+   "prompt": "What does TEETH stand for?",
+   "answer": "“Tried Everything Else, Try Homeopathy” (a doctors' in-joke)",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "List of acronyms: T",
+    "url": "https://en.wikipedia.org/wiki/List_of_acronyms%3A_T"
+   },
+   "draw": {
+    "list": "List of acronyms: T",
+    "rank": 28,
+    "seed": "20261109:acronyms"
+   }
+  },
+  {
+   "id": "laws-1",
+   "category": "laws",
+   "prompt": "In 1917, Idaho's fish and game rules banned fishing while doing what?",
+   "answer": "Riding on the back of any animal",
+   "place": "USA",
+   "region": "North America",
+   "era": "20th",
+   "source": {
+    "title": "Strange laws",
+    "url": "https://en.wikipedia.org/wiki/Strange_laws"
+   },
+   "draw": {
+    "list": "Strange laws",
+    "rank": 1,
+    "seed": "20261109:laws"
+   }
+  },
+  {
+   "id": "laws-7",
+   "category": "laws",
+   "prompt": "Britain's Salmon Act 1986 makes it an offence to handle salmon in what kind of circumstances?",
+   "answer": "Suspicious circumstances",
+   "place": "UK",
+   "region": "Europe",
+   "era": "20th",
+   "source": {
+    "title": "Strange laws",
+    "url": "https://en.wikipedia.org/wiki/Strange_laws"
+   },
+   "draw": {
+    "list": "Strange laws",
+    "rank": 7,
+    "seed": "20261109:laws"
+   }
+  },
+  {
+   "id": "laws-23",
+   "category": "laws",
+   "prompt": "In Jamaica, Barbados and Saudi Arabia, it's illegal for ordinary people to wear what?",
+   "answer": "Camouflage clothing",
+   "place": "Jamaica, Barbados & Saudi Arabia",
+   "region": "Caribbean & Middle East",
+   "era": "today",
+   "source": {
+    "title": "Strange laws",
+    "url": "https://en.wikipedia.org/wiki/Strange_laws"
+   },
+   "draw": {
+    "list": "Strange laws",
+    "rank": 23,
+    "seed": "20261109:laws"
+   }
+  },
+  {
+   "id": "films-1",
+   "category": "films",
+   "prompt": "What is the 1987 film Ishtar about?",
+   "answer": "Two hopeless American songwriters take a gig in Morocco and blunder into a Cold War spy standoff",
+   "place": "USA",
+   "region": "North America",
+   "era": "20th",
+   "source": {
+    "title": "Ishtar (film)",
+    "url": "https://en.wikipedia.org/wiki/Ishtar_(film)"
+   },
+   "draw": {
+    "list": "List of cult films: I",
+    "rank": 1,
+    "seed": "20261109:films"
+   }
+  },
+  {
+   "id": "films-10",
+   "category": "films",
+   "prompt": "What is the 1968 Japanese film Destroy All Monsters about?",
+   "answer": "Aliens take control of Earth's giant monsters and set them loose on the world's cities",
+   "place": "Japan",
+   "region": "Asia",
+   "era": "20th",
+   "source": {
+    "title": "Destroy All Monsters",
+    "url": "https://en.wikipedia.org/wiki/Destroy_All_Monsters"
+   },
+   "draw": {
+    "list": "List of cult films: D",
+    "rank": 10,
+    "seed": "20261109:films"
+   }
+  },
+  {
+   "id": "people-1",
+   "category": "people",
+   "prompt": "Who was Michael Goleniewski, and why is he remembered?",
+   "answer": "A Polish spy who defected to the West, then claimed to be the long-lost son of the last Russian tsar",
+   "place": "Poland",
+   "region": "Europe",
+   "era": "20th",
+   "source": {
+    "title": "Michał Goleniewski",
+    "url": "https://en.wikipedia.org/wiki/Micha%C5%82_Goleniewski"
+   },
+   "draw": {
+    "list": "List of impostors",
+    "rank": 1,
+    "seed": "20261109:people"
+   }
+  },
+  {
+   "id": "people-7",
+   "category": "people",
+   "prompt": "Who was Victor Lustig, and why is he remembered?",
+   "answer": "A con man known as “the man who sold the Eiffel Tower twice”",
+   "place": "Austria-Hungary",
+   "region": "Europe",
+   "era": "20th",
+   "source": {
+    "title": "Victor Lustig",
+    "url": "https://en.wikipedia.org/wiki/Victor_Lustig"
+   },
+   "draw": {
+    "list": "List of impostors",
+    "rank": 7,
+    "seed": "20261109:people"
+   }
+  },
+  {
+   "id": "people-9",
+   "category": "people",
+   "prompt": "Who was False Margaret, and why is she remembered?",
+   "answer": "A woman who turned up in Norway claiming to be Margaret, Maid of Norway, a princess who had died ten years earlier",
+   "place": "Norway",
+   "region": "Europe",
+   "era": "14th",
+   "source": {
+    "title": "False Margaret",
+    "url": "https://en.wikipedia.org/wiki/False_Margaret"
+   },
+   "draw": {
+    "list": "List of impostors",
+    "rank": 9,
+    "seed": "20261109:people"
+   }
+  },
+  {
+   "id": "jobs-4",
+   "category": "jobs",
+   "prompt": "What did a drysalter do?",
+   "answer": "Sold the chemicals used for dyeing cloth, and often pickles and dried meat too",
+   "place": "UK",
+   "region": "Europe",
+   "era": "18th",
+   "source": {
+    "title": "List of obsolete occupations",
+    "url": "https://en.wikipedia.org/wiki/List_of_obsolete_occupations"
+   },
+   "draw": {
+    "list": "List of obsolete occupations",
+    "rank": 4,
+    "seed": "20261109:jobs"
+   }
+  },
+  {
+   "id": "jobs-11",
+   "category": "jobs",
+   "prompt": "What did a burlak do?",
+   "answer": "Hauled river barges upstream by rope, on foot",
+   "place": "Russia",
+   "region": "Europe",
+   "era": "16th",
+   "source": {
+    "title": "List of obsolete occupations",
+    "url": "https://en.wikipedia.org/wiki/List_of_obsolete_occupations"
+   },
+   "draw": {
+    "list": "List of obsolete occupations",
+    "rank": 11,
+    "seed": "20261109:jobs"
+   }
+  },
+  {
+   "id": "jobs-12",
+   "category": "jobs",
+   "prompt": "What did a woad dyer do?",
+   "answer": "Dyed cloth blue with the woad plant, a smelly and unpopular job",
+   "place": "Europe",
+   "region": "Europe",
+   "era": "ancient",
+   "source": {
+    "title": "List of obsolete occupations",
+    "url": "https://en.wikipedia.org/wiki/List_of_obsolete_occupations"
+   },
+   "draw": {
+    "list": "List of obsolete occupations",
+    "rank": 12,
+    "seed": "20261109:jobs"
+   }
+  },
+  {
+   "id": "phobias-1",
+   "category": "phobias",
+   "prompt": "What is katsaridaphobia the fear of?",
+   "answer": "Cockroaches",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "List of phobias",
+    "url": "https://en.wikipedia.org/wiki/List_of_phobias"
+   },
+   "draw": {
+    "list": "List of phobias",
+    "rank": 1,
+    "seed": "20261109:phobias"
+   }
+  },
+  {
+   "id": "phobias-5",
+   "category": "phobias",
+   "prompt": "What is globophobia the fear of?",
+   "answer": "Balloons",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "List of phobias",
+    "url": "https://en.wikipedia.org/wiki/List_of_phobias"
+   },
+   "draw": {
+    "list": "List of phobias",
+    "rank": 5,
+    "seed": "20261109:phobias"
+   }
+  },
+  {
+   "id": "phobias-10",
+   "category": "phobias",
+   "prompt": "What is aichmophobia the fear of?",
+   "answer": "Sharp, pointed things like needles and knives",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "List of phobias",
+    "url": "https://en.wikipedia.org/wiki/List_of_phobias"
+   },
+   "draw": {
+    "list": "List of phobias",
+    "rank": 10,
+    "seed": "20261109:phobias"
+   }
+  },
+  {
+   "id": "groups-4",
+   "category": "groups",
+   "prompt": "What is a group of peafowl (peacocks) called?",
+   "answer": "An ostentation",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "List of animal names",
+    "url": "https://en.wikipedia.org/wiki/List_of_animal_names"
+   },
+   "draw": {
+    "list": "List of animal names",
+    "rank": 4,
+    "seed": "20261109:groups"
+   }
+  },
+  {
+   "id": "groups-5",
+   "category": "groups",
+   "prompt": "What is a group of cardinals (the birds) called?",
+   "answer": "A college (also a conclave, a radiance or a Vatican)",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "List of animal names",
+    "url": "https://en.wikipedia.org/wiki/List_of_animal_names"
+   },
+   "draw": {
+    "list": "List of animal names",
+    "rank": 5,
+    "seed": "20261109:groups"
+   }
+  },
+  {
+   "id": "groups-7",
+   "category": "groups",
+   "prompt": "What is a group of baboons called?",
+   "answer": "A flange (or a troop)",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "List of animal names",
+    "url": "https://en.wikipedia.org/wiki/List_of_animal_names"
+   },
+   "draw": {
+    "list": "List of animal names",
+    "rank": 7,
+    "seed": "20261109:groups"
+   }
+  },
+  {
+   "id": "sayings-5",
+   "category": "sayings",
+   "prompt": "In Tamil, what does “a gourd on paper is no good for cooking” mean?",
+   "answer": "Book learning alone won't help you in real life",
+   "place": "India & Sri Lanka",
+   "region": "Asia",
+   "era": "—",
+   "source": {
+    "title": "ஏட்டு சுரைக்காய் கறிக்கு உதவாது",
+    "url": "https://en.wiktionary.org/wiki/%E0%AE%8F%E0%AE%9F%E0%AF%8D%E0%AE%9F%E0%AF%81_%E0%AE%9A%E0%AF%81%E0%AE%B0%E0%AF%88%E0%AE%95%E0%AF%8D%E0%AE%95%E0%AE%BE%E0%AE%AF%E0%AF%8D_%E0%AE%95%E0%AE%B1%E0%AE%BF%E0%AE%95%E0%AF%8D%E0%AE%95%E0%AF%81_%E0%AE%89%E0%AE%A4%E0%AE%B5%E0%AE%BE%E0%AE%A4%E0%AF%81"
+   },
+   "draw": {
+    "list": "Category:Tamil idioms",
+    "rank": 5,
+    "seed": "20261109:sayings"
+   }
+  },
+  {
+   "id": "sayings-11",
+   "category": "sayings",
+   "prompt": "In Norwegian, what does it mean to “fire for the crows”?",
+   "answer": "To waste heat, like running the stove with the windows open",
+   "place": "Norway",
+   "region": "Europe",
+   "era": "—",
+   "source": {
+    "title": "fyra for kråkene",
+    "url": "https://en.wiktionary.org/wiki/fyra_for_kr%C3%A5kene"
+   },
+   "draw": {
+    "list": "Category:Norwegian Nynorsk idioms",
+    "rank": 11,
+    "seed": "20261109:sayings"
+   }
+  },
+  {
+   "id": "sayings-18",
+   "category": "sayings",
+   "prompt": "In Cebuano (spoken in the Philippines), what does it mean to “grow wide leaves”?",
+   "answer": "To prosper, or start doing well with money",
+   "place": "Philippines",
+   "region": "Asia",
+   "era": "—",
+   "source": {
+    "title": "dahon og lapad",
+    "url": "https://en.wiktionary.org/wiki/dahon_og_lapad"
+   },
+   "draw": {
+    "list": "Category:Cebuano idioms",
+    "rank": 18,
+    "seed": "20261109:sayings"
+   }
+  },
+  {
+   "id": "sports-5",
+   "category": "sports",
+   "prompt": "What is spherical chess?",
+   "answer": "Chess played on a board wrapped around a ball",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "Spherical chess",
+    "url": "https://en.wikipedia.org/wiki/Spherical_chess"
+   },
+   "draw": {
+    "list": "List of sports",
+    "rank": 5,
+    "seed": "20261109:sports"
+   }
+  },
+  {
+   "id": "sports-9",
+   "category": "sports",
+   "prompt": "What is run archery?",
+   "answer": "Running combined with archery, like a biathlon but with bows",
+   "place": "—",
+   "region": "—",
+   "era": "—",
+   "source": {
+    "title": "Run archery",
+    "url": "https://en.wikipedia.org/wiki/Run_archery"
+   },
+   "draw": {
+    "list": "List of sports",
+    "rank": 9,
+    "seed": "20261109:sports"
+   }
+  },
+  {
+   "id": "sports-31",
+   "category": "sports",
+   "prompt": "What was a “one-armed versus one-legged” match?",
+   "answer": "Cricket between injured navy veterans: one team had one arm each, the other one leg each",
+   "place": "UK",
+   "region": "Europe",
+   "era": "18th",
+   "source": {
+    "title": "One-armed versus one-legged cricket",
+    "url": "https://en.wikipedia.org/wiki/One-armed_versus_one-legged_cricket"
+   },
+   "draw": {
+    "list": "List of sports",
+    "rank": 31,
+    "seed": "20261109:sports"
+   }
+  },
+  {
+   "id": "places-1",
+   "category": "places",
+   "prompt": "How did Dhaulagiri, a mountain in Nepal, get its name?",
+   "answer": "It means “dazzling white mountain” in Sanskrit",
+   "place": "Nepal",
+   "region": "Asia",
+   "era": "—",
+   "source": {
+    "title": "Dhaulagiri",
+    "url": "https://en.wikipedia.org/wiki/Dhaulagiri"
+   },
+   "draw": {
+    "list": "List of tautological place names",
+    "rank": 1,
+    "seed": "20261109:places"
+   }
+  },
+  {
+   "id": "places-3",
+   "category": "places",
+   "prompt": "How did Newtownballynoe, in County Cork, Ireland, get its name?",
+   "answer": "It means “New Town New Town”: ballynoe is Irish for “new town”",
+   "place": "Ireland",
+   "region": "Europe",
+   "era": "—",
+   "source": {
+    "title": "List of tautological place names",
+    "url": "https://en.wikipedia.org/wiki/List_of_tautological_place_names"
+   },
+   "draw": {
+    "list": "List of tautological place names",
+    "rank": 3,
+    "seed": "20261109:places"
+   }
+  },
+  {
+   "id": "places-4",
+   "category": "places",
+   "prompt": "How did the Basque place Azpilikuetagaraikosaroiarenberekolarrea get its name?",
+   "answer": "It means “the low meadow of the sheep pen in upper Azpilikueta”",
+   "place": "Spain",
+   "region": "Europe",
+   "era": "—",
+   "source": {
+    "title": "List of long place names",
+    "url": "https://en.wikipedia.org/wiki/List_of_long_place_names"
+   },
+   "draw": {
+    "list": "List of long place names",
+    "rank": 4,
+    "seed": "20261109:places"
+   }
+  }
+ ]
+}

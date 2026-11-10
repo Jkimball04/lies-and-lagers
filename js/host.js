@@ -466,6 +466,7 @@ function tvView() {
   if (r && ["writing", "reading", "voting", "reveal"].includes(S.phase)) {
     view.category = { name: catName(r.prompt.category) };
     view.prompt = {
+      question: r.prompt.question,
       display: r.prompt.display || "",
       image: r.prompt.image ? { url: r.prompt.image.url, covers: r.prompt.image.covers || [] } : null,
     };
@@ -649,13 +650,19 @@ function mainWriting() {
     ${sent < r.inRound.length ? `<p class="small muted right">Anyone who hasn't sent yet will be stuck with whatever they've typed so far.</p>` : ""}</section>`;
 }
 
+// The question (and picture) at the top of the reading and voting pages.
+function questionBar(pr) {
+  return `<div class="panel qbar"><div><p class="label">${esc(catName(pr.category))} · the question</p><p class="read">${esc(pr.question)}</p></div>
+    ${pr.image ? pictureHTML(pr.image, { cls: "thumb" }) : ""}</div>`;
+}
+
 function mainReading() {
   const r = S.round;
   const rows = r.list.map((a, i) => `<li class="ans ${i === r.readIndex ? "now" : ""} ${i < r.readIndex ? "done" : ""}">
       <span class="num">${a.n}</span><span class="txt">${esc(a.text)}</span>
       <span class="who">${a.isTrue ? `<b class="true">★ TRUE ANSWER</b>` : esc(nameOf(a.author))}</span></li>`).join("");
   const last = r.readIndex >= r.list.length - 1;
-  return `<section class="reading"><h2>Read these out, in order</h2>
+  return `<section class="reading">${questionBar(r.prompt)}<h2>Read these out, in order</h2>
     <p class="muted">Say the number, then the answer. Word them so they all sound alike. The TV lights up each number as you go.</p>
     <ol class="answers">${rows}</ol>
     <div class="actions"><button class="btn ghost" data-act="read-prev" ${r.readIndex <= 0 ? "disabled" : ""}>◀ Back</button>
@@ -689,9 +696,7 @@ function mainVoting() {
   const skipped = vs.filter(pid => r.votes[pid] && r.votes[pid].skipped);
   const sitting = r.inRound.filter(pid => !isVoter(pid));
   const done = vs.filter(voteDone).length;
-  return `<section class="voting">
-    <div class="panel qbar"><div><p class="label">${esc(catName(pr.category))} · the question</p><p class="read">${esc(pr.question)}</p></div>
-      ${pr.image ? pictureHTML(pr.image, { cls: "thumb" }) : ""}</div>
+  return `<section class="voting">${questionBar(pr)}
     <div class="vcols">
     <div><h2>Match each vote to an answer</h2>
       <p class="muted">${sel ? `Now tap the answer <b>${esc(nameOf(sel))}</b> means.` : "Tap a vote on the right, then tap the answer it means."}</p>${answers}</div>

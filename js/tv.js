@@ -66,28 +66,36 @@ function between(v) {
       <p class="tvsub">New players can join now: room <b>${esc(v.room)}</b></p></div></div>`;
 }
 
-function promptBlock(v, small = false) {
-  if (v.prompt.image) return `<div class="tvpic ${small ? "small" : ""}">${pictureHTML(v.prompt.image)}</div>`;
-  return `<div class="tvprompt ${small ? "small" : ""}">${esc(v.prompt.display)}</div>`;
+// size: "" (big), "withq" (big, leaving room for the question above it) or "small"
+function promptBlock(v, size = "") {
+  if (v.prompt.image) return `<div class="tvpic ${size}">${pictureHTML(v.prompt.image)}</div>`;
+  return `<div class="tvprompt ${size === "small" ? "small" : ""}">${esc(v.prompt.display)}</div>`;
+}
+
+// Picture questions: the question sits above the picture (word prompts already show it as their text).
+function questionAbove(v) {
+  const q = v.prompt.question;
+  return q && q !== v.prompt.display ? `<div class="tvq">${esc(q)}</div>` : "";
 }
 
 function writing(v) {
   const chips = v.done.map(p => `<span class="tvchip ${p.done ? "done" : ""}">${p.done ? "✓ " : ""}${esc(p.name)}</span>`).join("");
-  return `${top(v, catChip(v))}<div class="tvbody">${promptBlock(v)}</div><div class="tvfoot">${chips}</div>`;
+  const q = questionAbove(v);
+  return `${top(v, catChip(v))}<div class="tvbody col">${q}${promptBlock(v, q ? "withq" : "")}</div><div class="tvfoot">${chips}</div>`;
 }
 
 function reading(v) {
   const n = v.reading.count, i = v.reading.index;
   const tiles = Array.from({ length: n }, (_, k) =>
     `<div class="tvtile ${k < i ? "read" : ""} ${k === i ? "now" : ""}">${k + 1}</div>`).join("");
-  return `${top(v, catChip(v))}<div class="tvbody col">${promptBlock(v, true)}<div class="tvtiles">${tiles}</div>
+  return `${top(v, catChip(v))}<div class="tvbody col">${questionAbove(v)}${promptBlock(v, "small")}<div class="tvtiles">${tiles}</div>
     <p class="tvsub">Listen to the host 👂 and remember the one you think is true</p></div>`;
 }
 
 function voting(v) {
   const done = v.voting.filter(p => p.voted).length;
   const chips = v.voting.map(p => `<span class="tvchip ${p.voted ? "done" : ""}">${p.voted ? "✓ " : ""}${esc(p.name)}</span>`).join("");
-  return `${top(v, catChip(v))}<div class="tvbody col">${promptBlock(v, true)}
+  return `${top(v, catChip(v))}<div class="tvbody col">${questionAbove(v)}${promptBlock(v, "small")}
     <div class="tvbig">Which one is true?</div><p class="tvsub">Type your vote on your phone · ${done} of ${v.voting.length} in</p></div>
     <div class="tvfoot">${chips}</div>`;
 }

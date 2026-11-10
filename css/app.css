@@ -187,6 +187,8 @@ body.tv { overflow: hidden; height: 100vh; background: radial-gradient(ellipse a
 .tvprompt.small { font-size: 2.4vw; }
 .tvpic .pic-frame img { max-height: 66vh; max-width: 86vw; border-radius: 1vw; box-shadow: 0 2vh 6vh rgba(0, 0, 0, .5); }
 .tvpic.small .pic-frame img { max-height: 30vh; }
+.tvpic.withq .pic-frame img { max-height: 58vh; }
+.tvq { font-family: var(--display); font-size: 2.8vw; line-height: 1.15; color: var(--foam); text-align: center; max-width: 85vw; }
 .tvfoot { display: flex; flex-wrap: wrap; justify-content: center; gap: 1vw; min-height: 5vh; align-items: center; }
 .tvchip { font-size: 1.5vw; padding: .3em .9em; border-radius: 999px; background: var(--panel2); color: var(--muted); border: 1px solid var(--line); }
 .tvchip.done { background: var(--true); color: #13240f; border-color: var(--true); font-weight: 700; }

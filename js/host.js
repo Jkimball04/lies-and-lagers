@@ -11,6 +11,7 @@ import { hostNet, tvChannel } from "./net.js";
 const mode = netMode();
 const $ = s => document.querySelector(s);
 const SAVE_KEY = "ll-host";
+const SEEN_KEY = "ll-seen"; // prompts this laptop has dealt in earlier games, to avoid repeats
 const MAX_PLAYERS = 16;
 const GAME_ROUNDS = 13; // rounds in a game (a ?rounds= web address setting overrides it, e.g. for a quick test)
 const ACTIVE = ["writing", "reading", "voting"];
@@ -19,7 +20,7 @@ let deck = null, cats = [], catById = {};
 let S = null;              // the whole game
 let net = null, tv = null;
 const conns = new Map();   // connection id -> player id
-const ui = { cat: null, draft: null, editCovers: false, wiki: null, netStatus: "starting", saved: null };
+const ui = { draft: null, editCovers: false, wiki: null, netStatus: "starting", saved: null };
 let saveTimer = null, tvTimer = null, toastTimer = null, beat = null;
 
 init();
@@ -44,7 +45,7 @@ async function init() {
 
 function newState() {
   const rounds = Math.max(1, Math.min(50, Number(param("rounds")) || GAME_ROUNDS));
-  return { v: 1, mode, room: makeRoomCode(), phase: "lobby", players: {}, order: [], round: null, roundNo: 0, rounds, used: [], updated: Date.now() };
+  return { v: 1, mode, room: makeRoomCode(), phase: "lobby", players: {}, order: [], round: null, roundNo: 0, rounds, used: [], next: null, playedCats: [], updated: Date.now() };
 }
 
 function showResume(saved) {
@@ -232,23 +233,49 @@ function deckToDraft(p) {
     question: c.type === "picture" ? c.question : p.prompt,
     display: p.image ? "" : p.prompt,
     image: p.image ? JSON.parse(JSON.stringify(p.image)) : null,
-    answer: p.answer, source: p.source || null,
+    answer: p.answer, source: p.source || null, say: p.say || [],
   };
 }
 
-function choosePrompt(id) {
-  const p = deck.prompts.find(x => x.id === id);
-  if (!p) return;
-  ui.draft = deckToDraft(p);
-  ui.editCovers = false;
-  renderMain();
+// Prompts are dealt at random, not picked. Each game tries a new category every round, and this laptop
+// remembers which prompts it has dealt before (in ll-seen), so the same group doesn't get repeats from
+// earlier games. The host can swap a prompt that's familiar; it won't be dealt again.
+const seenList = () => storage.get(SEEN_KEY, []);
+function markSeen(id) {
+  if (!id) return;
+  const seen = seenList();
+  if (!seen.includes(id)) { seen.push(id); storage.set(SEEN_KEY, seen); }
+}
+
+function dealPrompt() {
+  const seen = new Set(seenList()), played = S.playedCats || [];
+  const fresh = deck.prompts.filter(p => !S.used.includes(p.id));
+  let pool = fresh.filter(p => !seen.has(p.id));
+  if (!pool.length) pool = fresh;                                     // everything's been seen: allow repeats
+  const newCat = pool.filter(p => !played.includes(p.category));
+  const notLast = pool.filter(p => p.category !== played[played.length - 1]);
+  pool = newCat.length ? newCat : notLast.length ? notLast : pool;
+  S.next = pool.length ? pool[Math.floor(Math.random() * pool.length)].id : null;
+}
+
+// Make sure a prompt is dealt for the coming round, and that it hasn't been played or swapped away.
+function ensureDealt() {
+  if (S.next && !S.used.includes(S.next) && deck.prompts.some(p => p.id === S.next)) return;
+  dealPrompt();
+  scheduleSave();
+}
+
+function swapPrompt() {
+  if (S.next && !S.used.includes(S.next)) S.used.push(S.next); // it won't be dealt again this game
+  markSeen(S.next);
+  dealPrompt();
+  Object.assign(ui, { draft: null, editCovers: false, wiki: null });
+  refresh({ side: false });
 }
 
 function startCustom() {
-  const cat = ui.cat || "friends";
-  const c = catById[cat];
-  ui.draft = { deckId: null, category: cat, custom: true, sitOut: [], question: c.type === "picture" ? c.question : "",
-    display: "", image: null, answer: "", source: null };
+  const c = catById.friends;
+  ui.draft = { deckId: null, category: c.id, custom: true, sitOut: [], question: "", display: "", image: null, answer: "", source: null, say: [] };
   ui.wiki = null;
   ui.editCovers = false;
   renderMain();
@@ -263,13 +290,18 @@ function startRoundFromDraft() {
     deckId: d.deckId, category: d.category, kind: d.image ? "picture" : "text", question,
     display: d.image ? "" : ((d.display || "").trim() || question),
     image: d.image ? JSON.parse(JSON.stringify(d.image)) : null,
-    answer, source: d.source || null,
+    answer, source: d.source || null, say: d.say || [],
   };
   const sitOut = (d.sitOut || []).filter(pid => S.players[pid]);
   S.roundNo += 1;
   S.round = { n: S.roundNo, prompt, sitOut, inRound: S.order.filter(pid => !sitOut.includes(pid)),
     entries: {}, list: null, readIndex: 0, votes: {}, points: {}, confirmed: false };
-  if (prompt.deckId && !S.used.includes(prompt.deckId)) S.used.push(prompt.deckId);
+  if (prompt.deckId) {
+    if (!S.used.includes(prompt.deckId)) S.used.push(prompt.deckId);
+    markSeen(prompt.deckId);
+    if (prompt.deckId === S.next) S.next = null; // the dealt prompt is used up; the next round gets a new one
+  }
+  S.playedCats = [...(S.playedCats || []), prompt.category];
   S.phase = "writing";
   Object.assign(ui, { draft: null, editCovers: false, wiki: null });
   refresh({ views: true });
@@ -279,6 +311,8 @@ function cancelRound() {
   if (!confirm("Cancel this round? Nobody scores, and you go back to picking a prompt.")) return;
   const id = S.round && S.round.prompt.deckId;
   S.used = S.used.filter(x => x !== id);
+  if (id) S.next = id; // back to the same prompt; the host can start it again or swap it
+  S.playedCats = (S.playedCats || []).slice(0, -1);
   S.roundNo -= 1;
   S.round = null;
   S.phase = "pick";
@@ -389,7 +423,7 @@ function finishGame() {
 function playAgain() {
   if (!confirm("Start a new game with the same players? Everyone's score goes back to zero.")) return;
   for (const p of Object.values(S.players)) p.score = 0;
-  Object.assign(S, { phase: "lobby", round: null, roundNo: 0 });
+  Object.assign(S, { phase: "lobby", round: null, roundNo: 0, next: null, playedCats: [] }); // S.used is kept: no repeats tonight
   refresh({ views: true });
 }
 
@@ -508,7 +542,7 @@ function tvView() {
 // ---------------------------------------------------------------- drawing the host's screen
 
 const brandHTML = () => logoHTML();
-const STEPS = [["lobby", "Lobby"], ["rules", "How to play"], ["pick", "Pick a prompt"], ["writing", "Writing"], ["reading", "Reading"],
+const STEPS = [["lobby", "Lobby"], ["rules", "How to play"], ["pick", "Next prompt"], ["writing", "Writing"], ["reading", "Reading"],
   ["voting", "Voting"], ["novotes", "No votes"], ["reveal", "Reveal"], ["scores", "Scores"]];
 const NET_LABEL = { online: "● Ready for players", starting: "Starting…", reconnecting: "Reconnecting…",
   "waiting-for-code": "Getting the room ready…" };
@@ -584,27 +618,29 @@ function mainRules() {
       <button class="btn big" data-act="lets-play">Let's play →</button></div></section>`;
 }
 
+// The next round's prompt, dealt at random. The host can swap it, or make their own instead.
 function mainPick() {
-  if (!ui.cat) ui.cat = cats[0].id;
-  const chips = cats.map(c => {
-    const left = deck.prompts.filter(p => p.category === c.id && !S.used.includes(p.id)).length;
-    return `<button class="chip ${c.id === ui.cat ? "on" : ""}" data-act="cat" data-cat="${c.id}">${esc(c.name)}<small>${c.id === "friends" ? "✎" : left}</small></button>`;
-  }).join("");
-  const cards = deck.prompts.filter(p => p.category === ui.cat).map(p => {
-    const used = S.used.includes(p.id), on = ui.draft && ui.draft.deckId === p.id;
-    return `<div class="pcard ${used ? "used" : ""} ${on ? "on" : ""}" data-act="pick" data-id="${esc(p.id)}" role="button" tabindex="0">
-      ${p.image ? pictureHTML(p.image) : `<span class="ptext">${esc(p.prompt)}</span>`}
-      <span class="pans">${used ? "<b>Used</b> · " : ""}${esc(p.answer)}</span></div>`;
-  }).join("");
-  const empty = ui.cat === "friends"
-    ? `<div class="panel"><p class="muted">You make these up yourself. Get the true answer from the person in secret first; they sit the round out.</p>
-       <button class="btn small" data-act="custom">✎ Make one now</button></div>`
-    : `<p class="muted">No prompts in this category yet.</p>`;
-  return `<section class="pick"><div class="pick-head"><h2>Round ${S.roundNo + 1} of ${totalRounds()}: pick a prompt</h2>
-      <button class="btn small ghost" data-act="custom">✎ Make your own</button></div>
-    <div class="chips">${chips}</div>
-    <div class="pick-body"><div class="prompt-list">${cards || empty}</div>
-      <div class="draft">${ui.draft ? (ui.draft.custom ? customPanel() : draftPanel()) : `<div class="panel muted">Pick a prompt to see it here, or make your own.</div>`}</div></div></section>`;
+  const head = `<h2>Round ${S.roundNo + 1} of ${totalRounds()}</h2>`;
+  if (ui.draft && ui.draft.custom) return `<section class="pick">${head}<div class="draft">${customPanel()}</div></section>`;
+  ensureDealt();
+  const p = S.next && deck.prompts.find(x => x.id === S.next);
+  if (!p) {
+    return `<section class="pick">${head}<div class="draft"><div class="panel"><p class="read">That's every prompt in the deck!</p>
+      <p class="muted">Make your own to keep playing.</p>
+      <div class="actions"><button class="btn big" data-act="custom">✎ Make your own</button></div></div></div></section>`;
+  }
+  if (!ui.draft || ui.draft.deckId !== p.id) { ui.draft = deckToDraft(p); ui.editCovers = false; }
+  const left = deck.prompts.filter(x => !S.used.includes(x.id)).length;
+  return `<section class="pick">${head}
+    <p class="muted pick-note">Dealt at random (${left} prompts left in the deck). Seen it before, or does someone already know the answer? Swap it.</p>
+    <div class="draft">${draftPanel()}</div></section>`;
+}
+
+// How to say tricky words in the prompt or the true answer, for the host only.
+function sayHTML(say) {
+  if (!say || !say.length) return "";
+  return `<div class="sayit"><p class="label">How to say it <span>· capitals = say it louder</span></p>
+    ${say.map(([word, how]) => `<p><b>${esc(word)}</b><span>${esc(how)}</span></p>`).join("")}</div>`;
 }
 
 function coverTools(d) {
@@ -617,11 +653,14 @@ function coverTools(d) {
 function draftPanel() {
   const d = ui.draft;
   return `<div class="panel"><p class="label">${esc(catName(d.category))}</p>
-    ${d.image ? pictureHTML(d.image, { editing: ui.editCovers, cls: "big" }) + coverTools(d) : `<p class="tvtext">${esc(d.display)}</p>`}
+    ${d.image ? pictureHTML(d.image, { editing: ui.editCovers, cls: "big" }) + coverTools(d) : d.display !== d.question ? `<p class="tvtext">${esc(d.display)}</p>` : ""}
     <p class="label">Read this out</p><p class="read">${esc(d.question)}</p>
+    ${sayHTML(d.say)}
     <p class="label">True answer</p><p class="answer">${esc(d.answer)}</p>
     ${d.source ? `<p class="small muted">Source: <a href="${esc(d.source.url)}" target="_blank" rel="noopener">${esc(d.source.title)}</a></p>` : ""}
-    <div class="actions"><button class="btn big" data-act="start-round">Start round ${S.roundNo + 1} →</button></div></div>`;
+    <div class="actions"><button class="btn ghost" data-act="swap">↻ Swap it</button>
+      <button class="btn small ghost" data-act="custom">✎ Make your own</button>
+      <button class="btn big" data-act="start-round">Start round ${S.roundNo + 1} →</button></div></div>`;
 }
 
 function customPanel() {
@@ -646,7 +685,8 @@ function customPanel() {
     ${d.image ? "" : `<label>What the TV shows <span class="muted">(leave blank to show the question)</span><textarea data-field="display" rows="2">${esc(d.display)}</textarea></label>`}
     <label>True answer<textarea data-field="answer" rows="2" placeholder="Short and plain, the way a player would write it">${esc(d.answer)}</textarea></label>
     ${S.order.length ? `<p class="label" style="margin-top:1em">Sitting this round out <span class="muted">(like the person it's about)</span></p><div class="sitout">${sitOut}</div>` : ""}
-    <div class="actions"><button class="btn big" data-act="start-round">Start round ${S.roundNo + 1} →</button></div></div>`;
+    <div class="actions"><button class="btn ghost" data-act="back-to-dealt">◀ Use the dealt prompt</button>
+      <button class="btn big" data-act="start-round">Start round ${S.roundNo + 1} →</button></div></div>`;
 }
 
 function writingCard(pid) {
@@ -675,6 +715,7 @@ function mainWriting() {
   return `<section class="writing">
     <div class="panel readout"><div>
       <p class="label">${esc(catName(pr.category))} · read this out</p><p class="read big">${esc(pr.question)}</p>
+      ${sayHTML(pr.say)}
       <p class="label">True answer <span class="muted">(keep it to yourself)</span></p><p class="answer">${esc(pr.answer)}</p>
       ${r.sitOut.length ? `<p class="small muted">Sitting out: ${esc(listNames(r.sitOut.map(nameOf)))}</p>` : ""}</div>
       ${pr.image ? pictureHTML(pr.image, { cls: "thumb" }) : ""}</div>
@@ -687,7 +728,7 @@ function mainWriting() {
 
 // The question (and picture) at the top of the reading and voting pages.
 function questionBar(pr) {
-  return `<div class="panel qbar"><div><p class="label">${esc(catName(pr.category))} · the question</p><p class="read">${esc(pr.question)}</p></div>
+  return `<div class="panel qbar"><div><p class="label">${esc(catName(pr.category))} · the question</p><p class="read">${esc(pr.question)}</p>${sayHTML(pr.say)}</div>
     ${pr.image ? pictureHTML(pr.image, { cls: "thumb" }) : ""}</div>`;
 }
 
@@ -799,8 +840,8 @@ function onClick(e) {
     "start-game": () => { S.phase = "rules"; refresh({ views: true }); },
     "lets-play": () => { S.phase = "pick"; refresh({ views: true }); },
     "back-lobby": () => { S.phase = "lobby"; refresh({ views: true }); },
-    cat: () => { ui.cat = d.cat; ui.draft = null; ui.editCovers = false; renderMain(); },
-    pick: () => choosePrompt(d.id),
+    swap: swapPrompt,
+    "back-to-dealt": () => { Object.assign(ui, { draft: null, editCovers: false, wiki: null }); renderMain(); },
     custom: startCustom,
     "edit-covers": () => { ui.editCovers = !ui.editCovers; renderMain(); },
     "cover-x": () => { ui.draft.image.covers.splice(+d.i, 1); renderMain(); },

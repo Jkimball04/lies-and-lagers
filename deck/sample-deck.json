@@ -1,6 +1,6 @@
 {
  "name": "Lies & Lagers sample deck",
- "built": "2026-11-10",
+ "built": "2026-11-11",
  "seed": 20261109,
  "categories": [
   {
@@ -130,6 +130,12 @@
     "rank": 3,
     "seed": "20261109:inventors"
    },
+   "say": [
+    [
+     "Igor Sikorsky",
+     "EE-gor sih-KOR-skee"
+    ]
+   ],
    "image": {
     "file": "Sikorsky,_Igor.jpg",
     "width": 504,
@@ -188,6 +194,12 @@
     "rank": 22,
     "seed": "20261109:inventors"
    },
+   "say": [
+    [
+     "Hellschreiber",
+     "HEL-shry-ber"
+    ]
+   ],
    "image": {
     "file": "Rudolf_Hell_führt_seinen_Wetterkartenschreiber_vor_(Kiel_44.592).jpg",
     "width": 859,
@@ -304,6 +316,12 @@
     "rank": 2,
     "seed": "20261109:saints"
    },
+   "say": [
+    [
+     "Nonnatus",
+     "non-NAY-tus"
+    ]
+   ],
    "image": {
     "file": "San_Ramón_Nonato_(Museo_Ibercaja_Camón_Aznar).jpg",
     "width": 595,
@@ -333,6 +351,12 @@
     "rank": 5,
     "seed": "20261109:saints"
    },
+   "say": [
+    [
+     "Theobald of Provins",
+     "THEE-uh-bawld of proh-VAN"
+    ]
+   ],
    "image": {
     "file": "Joigny_-_Eglise_Saint-Thilbault_-_statue_de_Juan_de_Juni.jpg",
     "width": 1280,
@@ -362,6 +386,12 @@
     "rank": 10,
     "seed": "20261109:saints"
    },
+   "say": [
+    [
+     "Phanourios",
+     "fah-NOOR-ee-ohs"
+    ]
+   ],
    "image": {
     "file": "Άγγελος_Ακοτάντος_-_Άγιος_Φανούριος_7660.jpg",
     "width": 1280,
@@ -420,6 +450,12 @@
     "rank": 13,
     "seed": "20261109:royals"
    },
+   "say": [
+    [
+     "Menelik",
+     "MEN-uh-lik"
+    ]
+   ],
    "image": {
     "file": "Menelik_II_in_coronation_garb,_Emperor_of_Ethiopia.jpg",
     "width": 1280,
@@ -478,6 +514,12 @@
     "rank": 15,
     "seed": "20261109:creatures"
    },
+   "say": [
+    [
+     "Dinosaurus",
+     "dye-noh-SOR-us"
+    ]
+   ],
    "image": {
     "file": "Dinosaurus_murchisonii.png",
     "width": 1280,
@@ -507,6 +549,12 @@
     "rank": 31,
     "seed": "20261109:creatures"
    },
+   "say": [
+    [
+     "opah",
+     "OH-puh"
+    ]
+   ],
    "image": {
     "file": "Moonfish_600.jpg",
     "width": 600,
@@ -694,7 +742,13 @@
     "list": "Category:English obsolete terms",
     "rank": 3,
     "seed": "20261109:words"
-   }
+   },
+   "say": [
+    [
+     "glidder",
+     "GLID-er (rhymes with “bidder”)"
+    ]
+   ]
   },
   {
    "id": "words-8",
@@ -712,7 +766,13 @@
     "list": "Category:English archaic terms",
     "rank": 8,
     "seed": "20261109:words"
-   }
+   },
+   "say": [
+    [
+     "evagation",
+     "ev-uh-GAY-shun"
+    ]
+   ]
   },
   {
    "id": "words-11",
@@ -730,7 +790,13 @@
     "list": "Category:English obsolete terms",
     "rank": 11,
     "seed": "20261109:words"
-   }
+   },
+   "say": [
+    [
+     "walm",
+     "WAWM (like “warm” without the r)"
+    ]
+   ]
   },
   {
    "id": "acronyms-12",
@@ -892,7 +958,13 @@
     "list": "List of impostors",
     "rank": 1,
     "seed": "20261109:people"
-   }
+   },
+   "say": [
+    [
+     "Goleniewski",
+     "goh-leh-NYEF-skee"
+    ]
+   ]
   },
   {
    "id": "people-7",
@@ -964,7 +1036,13 @@
     "list": "List of obsolete occupations",
     "rank": 11,
     "seed": "20261109:jobs"
-   }
+   },
+   "say": [
+    [
+     "burlak",
+     "boor-LAHK"
+    ]
+   ]
   },
   {
    "id": "jobs-12",
@@ -982,7 +1060,13 @@
     "list": "List of obsolete occupations",
     "rank": 12,
     "seed": "20261109:jobs"
-   }
+   },
+   "say": [
+    [
+     "woad",
+     "WOHD (rhymes with “road”)"
+    ]
+   ]
   },
   {
    "id": "phobias-1",
@@ -1000,7 +1084,13 @@
     "list": "List of phobias",
     "rank": 1,
     "seed": "20261109:phobias"
-   }
+   },
+   "say": [
+    [
+     "katsaridaphobia",
+     "kat-sar-ih-duh-FOH-bee-uh"
+    ]
+   ]
   },
   {
    "id": "phobias-5",
@@ -1018,7 +1108,13 @@
     "list": "List of phobias",
     "rank": 5,
     "seed": "20261109:phobias"
-   }
+   },
+   "say": [
+    [
+     "globophobia",
+     "gloh-boh-FOH-bee-uh"
+    ]
+   ]
   },
   {
    "id": "phobias-10",
@@ -1036,7 +1132,13 @@
     "list": "List of phobias",
     "rank": 10,
     "seed": "20261109:phobias"
-   }
+   },
+   "say": [
+    [
+     "aichmophobia",
+     "ike-moh-FOH-bee-uh"
+    ]
+   ]
   },
   {
    "id": "groups-4",
@@ -1108,7 +1210,13 @@
     "list": "Category:Tamil idioms",
     "rank": 5,
     "seed": "20261109:sayings"
-   }
+   },
+   "say": [
+    [
+     "Tamil",
+     "TAM-il"
+    ]
+   ]
   },
   {
    "id": "sayings-11",
@@ -1144,7 +1252,13 @@
     "list": "Category:Cebuano idioms",
     "rank": 18,
     "seed": "20261109:sayings"
-   }
+   },
+   "say": [
+    [
+     "Cebuano",
+     "seh-BWAH-noh"
+    ]
+   ]
   },
   {
    "id": "sports-5",
@@ -1216,7 +1330,13 @@
     "list": "List of tautological place names",
     "rank": 1,
     "seed": "20261109:places"
-   }
+   },
+   "say": [
+    [
+     "Dhaulagiri",
+     "dow-luh-GEER-ee"
+    ]
+   ]
   },
   {
    "id": "places-3",
@@ -1234,7 +1354,13 @@
     "list": "List of tautological place names",
     "rank": 3,
     "seed": "20261109:places"
-   }
+   },
+   "say": [
+    [
+     "Newtownballynoe",
+     "new-town-bal-ee-NOH"
+    ]
+   ]
   },
   {
    "id": "places-4",
@@ -1252,7 +1378,13 @@
     "list": "List of long place names",
     "rank": 4,
     "seed": "20261109:places"
-   }
+   },
+   "say": [
+    [
+     "Azpilikuetagaraikosaroiarenberekolarrea",
+     "ahs-pee-lee-KWEH-tah · gah-RYE-koh · sah-ROY-ah-ren · beh-REH-koh · lah-RREH-ah"
+    ]
+   ]
   }
  ]
 }

@@ -39,7 +39,7 @@ h1, h2, h3 { line-height: 1; }
 /* ---------------------------------------------------------------- shared pieces */
 
 /* Paper: anything that's a document on the table */
-.paper, .panel, .card, .side, .tray, .hdr, .pcard, .wcard, .ans, .vans, .board, .readout, .qbar, .draft .panel, .rapsheet, .wanted,
+.paper, .panel, .card, .side, .tray, .hdr, .wcard, .ans, .vans, .board, .readout, .qbar, .draft .panel, .rapsheet, .wanted,
 .flop, .verdict li, .steps5 li, .tvprompt, .intake, .phsent, .qrcard {
   background-color: var(--paper); background-image: var(--grain-dark); color: var(--ink);
 }
@@ -94,7 +94,7 @@ h1, h2, h3 { line-height: 1; }
 .paper .label, .readout .label, .qbar .label, .draft .panel .label, .wcard .label { color: var(--ink-muted); }
 .scribble { font-family: var(--hand); color: var(--scrib); display: inline-block; transform: rotate(-4deg); font-weight: 400; }
 .muted { color: var(--fg-soft); }
-:is(.paper, .panel, .card, .side, .tray, .hdr, .pcard, .wcard, .ans, .vans, .board, .readout, .qbar, .rapsheet, .wanted, .flop, .verdict li,
+:is(.paper, .panel, .card, .side, .tray, .hdr, .wcard, .ans, .vans, .board, .readout, .qbar, .rapsheet, .wanted, .flop, .verdict li,
   .steps5 li, .tvprompt, .intake, .phsent, .qrcard) :is(.muted, .label, label) { color: var(--ink-muted); }
 .small { font-size: .85rem; }
 .right { text-align: right; }
@@ -221,28 +221,17 @@ section h3 { font-family: var(--cond); font-weight: 900; font-stretch: 70%; font
 .tips { margin: 0; padding-left: 1.2em; }
 .tips li { margin: .45em 0; color: var(--ink); }
 
-/* Picking a prompt */
-.pick-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 22px; }
-.chip { font-family: var(--cond); font-weight: 800; font-stretch: 80%; font-size: .86rem; line-height: 1; text-transform: uppercase; letter-spacing: .05em;
-  background: var(--paper); color: var(--ink); border: 2px solid var(--ink); padding: .62em .85em .55em; cursor: pointer; }
-.chip:hover { background: var(--yellow-2); }
-.chip small { font: 400 .74rem/1 var(--type); color: var(--ink-muted); margin-left: 6px; letter-spacing: 0; }
-.chip.on { background: var(--yellow); color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
-.chip.on small { color: #6b5410; }
-.pick-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 22px; align-items: start; }
-.prompt-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px 14px; padding: 4px; }
-.pcard { padding: 10px 10px 12px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 8px;
-  transform: rotate(var(--r, 0deg)); transition: transform .12s, box-shadow .12s; box-shadow: 4px 4px 0 var(--shade); }
-.pcard:nth-child(3n+1) { --r: -.9deg; }
-.pcard:nth-child(3n+2) { --r: .7deg; }
-.pcard:nth-child(3n) { --r: -.3deg; }
-.pcard:hover { transform: rotate(0deg) translateY(-3px); box-shadow: 6px 6px 0 var(--ink); }
-.pcard.on { transform: rotate(0deg); box-shadow: 0 0 0 4px var(--yellow), 8px 8px 0 4px var(--ink); }
-.pcard.used { opacity: .4; }
-.pcard .pic-frame img { max-height: 112px; }
-.pcard .ptext { font: 800 1rem/1.25 var(--body); }
-.pcard .pans { font: 400 .76rem/1.35 var(--type); color: var(--ink-muted); }
+/* The dealt prompt */
+.pick .draft { max-width: 820px; }
+.pick-note { max-width: 820px; margin: -.2em 0 1.2em; }
+/* How to say tricky words (host only) */
+.sayit { margin: -.3em 0 1.1em; padding: .55em .9em .6em; background: #fff3b8; border-left: 5px solid var(--yellow); }
+.sayit .label { margin-bottom: .35em; }
+.sayit .label span { text-transform: none; letter-spacing: .02em; }
+.sayit p:not(.label) { margin: .2em 0; display: flex; flex-wrap: wrap; gap: .15em .7em; align-items: baseline; }
+.sayit b { font: 800 1rem/1.3 var(--body); }
+.sayit p:not(.label) span { font-family: var(--cond); font-weight: 800; font-stretch: 85%; font-size: 1.15rem; line-height: 1.3; letter-spacing: .03em; color: #8a2c00; }
+.qbar .sayit { margin: .7em 0 0; }
 .draft .panel { position: sticky; top: 128px; padding: 20px 22px; }
 .draft .pic.big .pic-frame img { max-height: 46vh; }
 .read { font: 800 1.25rem/1.3 var(--body); margin: 0 0 .9em; }
@@ -655,5 +644,5 @@ body.tv { --u: .85vw; }
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
   .side, .tray, .draft .panel { position: static; }
-  .pick-body, .vcols, .readout { grid-template-columns: 1fr; }
+  .vcols, .readout { grid-template-columns: 1fr; }
 }

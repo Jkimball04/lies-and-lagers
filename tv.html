@@ -6,11 +6,21 @@
   <title>Lies &amp; Lagers · TV</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Archivo:wdth,wght@62..125,100..900&family=Permanent+Marker&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/app.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 </head>
 <body class="tv">
+  <svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <!-- Worn rubber-stamp ink: knocks small holes out of the ink and roughens its edges. -->
+    <filter id="ink" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="7" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.4 2.7" result="wear"/>
+      <feComposite in="SourceGraphic" in2="wear" operator="in" result="worn"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="3" result="warp"/>
+      <feDisplacementMap in="worn" in2="warp" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
   <div class="tvwrap" id="tv"><div class="tvbody col"><p class="tvsub">Waiting for the host's window…</p></div></div>
   <button class="fsbtn" id="fs" type="button">⛶ Full screen</button>
   <script type="module" src="js/tv.js"></script>

@@ -98,15 +98,25 @@ export const FRIENDS = { id: "friends", name: "Friends & Family", type: "text", 
 
 // "How to play": the TV, the host's laptop and the phones all show these same five steps before round 1.
 export const RULES = [
-  ["📺", "A question goes up on the TV", "A weird word, an odd fact or a mystery picture."],
-  ["✍️", "Make up an answer that sounds true", "Type it on your phone. The goal is to fool everyone."],
-  ["🗣️", "The host reads out every answer", "Everyone's fakes plus the real one, all mixed up."],
-  ["🗳️", "Vote for the one you think is true", "Tap its number on your phone."],
-  ["🏆", "Score points", "1 for picking the true answer, and 1 for every player who falls for your fake."],
+  ["A question goes up on the TV", "A weird word, an odd fact or a mystery picture."],
+  ["Make up an answer that sounds true", "Type it on your phone. The goal is to fool everyone."],
+  ["The host reads out every answer", "Everyone's fakes plus the real one, all mixed up."],
+  ["Vote for the one you think is true", "Tap its number on your phone."],
+  ["Score points", "1 for picking the true answer, and 1 for every player who falls for your fake."],
 ];
 
-export const rulesHTML = (cls = "rules-list") => `<ol class="${cls}">${RULES.map(([icon, head, detail]) =>
-  `<li><span class="ico" aria-hidden="true">${icon}</span><span><b>${head}.</b> ${detail}</span></li>`).join("")}</ol>`;
+// An evidence marker: the yellow numbered tent used for answer numbers everywhere.
+export const markerHTML = (n, cls = "") => `<span class="mk ${cls}">${n}</span>`;
+
+export const rulesHTML = (cls = "rules-list") => `<ol class="${cls}">${RULES.map(([head, detail], i) =>
+  `<li>${markerHTML(i + 1)}<span class="txt"><b>${head}.</b> ${detail}</span></li>`).join("")}</ol>`;
+
+// The wordmark: "LIES & LAGERS" in cut-out ransom-note letters, each one a different scrap of paper.
+const LOGO_WORDS = [[["L", 1], ["I", 2], ["E", 3], ["S", 4]], [["L", 5], ["A", 6], ["G", 2], ["E", 4], ["R", 1], ["S", 3]]];
+export const logoHTML = (cls = "") => {
+  const word = letters => `<span class="w">${letters.map(([ch, k]) => `<span class="r r${k}">${ch}</span>`).join("")}</span>`;
+  return `<div class="ransom ${cls}" role="img" aria-label="Lies &amp; Lagers">${word(LOGO_WORDS[0])}<span class="amp">&amp;</span>${word(LOGO_WORDS[1])}</div>`;
+};
 
 export async function loadDeck() {
   const r = await fetch("deck/sample-deck.json", { cache: "no-cache" });

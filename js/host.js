@@ -4,7 +4,7 @@
 
 import {
   esc, param, netMode, pageUrl, joinUrl, storage, keepAwake, pictureHTML, qrSVG, FRIENDS, loadDeck,
-  listNames, cleanName, makeRoomCode, uid, shuffle, rulesHTML,
+  listNames, cleanName, makeRoomCode, uid, shuffle, rulesHTML, logoHTML,
 } from "./common.js";
 import { hostNet, tvChannel } from "./net.js";
 
@@ -507,7 +507,7 @@ function tvView() {
 
 // ---------------------------------------------------------------- drawing the host's screen
 
-const brandHTML = () => `<div class="brand">Lies <span>&amp;</span> Lagers</div>`;
+const brandHTML = () => logoHTML();
 const STEPS = [["lobby", "Lobby"], ["rules", "How to play"], ["pick", "Pick a prompt"], ["writing", "Writing"], ["reading", "Reading"],
   ["voting", "Voting"], ["novotes", "No votes"], ["reveal", "Reveal"], ["scores", "Scores"]];
 const NET_LABEL = { online: "● Ready for players", starting: "Starting…", reconnecting: "Reconnecting…",
@@ -520,7 +520,7 @@ function renderHeader() {
   const key = S.phase === "final" ? "scores" : S.phase;
   $("#hdr").innerHTML = `${brandHTML()}
     <div class="steps">${STEPS.map(([k, l]) => `<span class="${k === key ? "on" : ""}">${l}</span>`).join("")}</div>
-    <div class="roomcode">${roundLabel()}</div>
+    <div class="roundlbl">${roundLabel()}</div>
     <div class="roomcode">Room <b>${esc(S.room)}</b></div>
     <div class="netstat ${esc(ui.netStatus)}">${esc(NET_LABEL[ui.netStatus] || ui.netStatus)}${mode === "local" ? " · test mode" : ""}</div>
     <button class="btn small ghost" data-act="open-tv">Open TV screen</button>`;

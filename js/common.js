@@ -101,7 +101,7 @@ export const RULES = [
   ["📺", "A question goes up on the TV", "A weird word, an odd fact or a mystery picture."],
   ["✍️", "Make up an answer that sounds true", "Type it on your phone. The goal is to fool everyone."],
   ["🗣️", "The host reads out every answer", "Everyone's fakes plus the real one, all mixed up."],
-  ["🗳️", "Vote for the one you think is true", "Type a word or two so the host knows which answer you mean."],
+  ["🗳️", "Vote for the one you think is true", "Tap its number on your phone."],
   ["🏆", "Score points", "1 for picking the true answer, and 1 for every player who falls for your fake."],
 ];
 

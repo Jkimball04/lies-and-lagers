@@ -10,7 +10,7 @@ let room = (param("room") || "").toUpperCase().replace(/[^A-Z]/g, "").slice(0, 4
 let name = storage.get("ll-name", "");
 let pid = room ? session.get("ll-pid-" + room) : null;
 let net = null, view = null, status = "", joined = false, renderedKey = "";
-let draft = "", voteDraft = "", draftTimer = null, flashTimer = null;
+let draft = "", draftTimer = null, flashTimer = null;
 
 if (room && pid && name) { app.innerHTML = shell(`<p class="phbig">Rejoining…</p>`); connect(); } else joinScreen();
 
@@ -105,15 +105,12 @@ function render(force = false) {
   const v = view;
   // Only redraw when something that matters changed, so we never wipe what someone is typing.
   const key = v ? [v.phase, v.round, v.score, v.rank, v.answer && v.answer.submitted, v.answer && v.answer.sentBack, v.canVote,
-    v.vote && v.vote.submitted, v.vote && v.vote.sentBack].join("|") : "none";
+    v.vote && v.vote.n, v.vote && v.vote.count, v.vote && v.vote.mine].join("|") : "none";
   if (!force && key === renderedKey) return;
   const ta = document.getElementById("ans");
   if (ta) draft = ta.value;
-  const vi = document.getElementById("vote");
-  if (vi) voteDraft = vi.value;
   renderedKey = key;
   if (v && v.phase !== "writing") draft = "";
-  if (v && v.phase !== "voting") voteDraft = "";
   app.innerHTML = shell(body(v));
   wire(v);
 }
@@ -144,16 +141,20 @@ function body(v) {
         <button class="btn big" id="send" type="button">Send answer</button>
         <p class="phnote">The host can see your answer as you type it.</p>`;
     case "reading":
-      return `${cat}<p class="phbig">Listen to the host 👂</p><p class="muted">Remember which answer you think is the true one.</p>`;
-    case "voting":
+      return `${cat}<p class="phbig">Listen to the host 👂</p><p class="muted">Remember the number of the one you think is true.</p>`;
+    case "voting": {
       if (!v.canVote) return `${cat}<p class="phbig">Sit tight</p><p class="muted">You're not voting this round. Watch the TV for the reveal.</p>`;
-      if (v.vote && v.vote.submitted) {
-        return `${cat}<p class="phbig">Vote sent ✓</p><div class="phsent">${esc(v.vote.text)}</div><p class="muted">Watch the TV for the reveal.</p>`;
-      }
-      return `${cat}${v.vote && v.vote.sentBack ? `<p class="alert">The host needs you to be more specific!${v.vote.lastText ? ` You said “${esc(v.vote.lastText)}”.` : ""}</p>` : ""}
-        <p class="phbig">Which answer is true?</p><p class="muted">Type a word or two so the host knows which answer you mean.</p>
-        <input id="vote" maxlength="80" placeholder="e.g. the swamp one" autocomplete="off">
-        <button class="btn big" id="sendvote" type="button">Send vote</button>`;
+      const vt = v.vote || {};
+      // One button per answer the host read out. Your own answer's number is greyed out.
+      const btns = Array.from({ length: vt.count || 0 }, (_, i) => i + 1).map(n => {
+        const mine = n === vt.mine;
+        return `<button class="numbtn ${n === vt.n ? "on" : ""}" type="button" data-n="${n}" ${mine ? "disabled" : ""}
+          aria-label="${mine ? `Answer ${n} is yours` : `Vote for answer ${n}`}">${n}${mine ? "<small>yours</small>" : ""}</button>`;
+      }).join("");
+      return `${cat}<p class="phbig">${vt.n ? `You voted for ${vt.n} ✓` : "Which one is true?"}</p>
+        <p class="muted">${vt.n ? "Changed your mind? Tap a different number before the host locks in the votes." : "Tap the number of the answer you think is true."}</p>
+        <div class="numgrid">${btns}</div>`;
+    }
     case "novotes":
       return `${cat}<p class="phbig">Eyes on the TV 👀</p><p class="muted">The votes are in. The reveal is coming up.</p>`;
     case "reveal": {
@@ -189,20 +190,11 @@ function wire(v) {
       setTimeout(() => { if (document.body.contains(send)) send.disabled = false; }, 5000);
     });
   }
-  const vi = document.getElementById("vote");
-  if (vi) {
-    vi.value = voteDraft;
-    vi.addEventListener("input", () => { voteDraft = vi.value; });
-    const btn = document.getElementById("sendvote");
-    const sendVote = () => {
-      const text = vi.value.trim();
-      if (!text) { vi.focus(); return; }
-      if (!net || !net.send({ t: "vote", text })) { flash("Not connected yet. Try again in a moment."); return; }
-      btn.disabled = true;
-      setTimeout(() => { if (document.body.contains(btn)) btn.disabled = false; }, 5000);
-    };
-    btn.addEventListener("click", sendVote);
-    vi.addEventListener("keydown", e => { if (e.key === "Enter") sendVote(); });
+  for (const b of document.querySelectorAll(".numbtn")) {
+    b.addEventListener("click", () => {
+      if (!net || !net.send({ t: "vote", n: Number(b.dataset.n) })) { flash("Not connected yet. Try again in a moment."); return; }
+      for (const x of document.querySelectorAll(".numbtn")) x.classList.toggle("on", x === b); // light it up straight away
+    });
   }
 }
 

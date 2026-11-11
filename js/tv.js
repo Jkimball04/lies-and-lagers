@@ -103,14 +103,18 @@ function reading(v) {
   const tiles = Array.from({ length: n }, (_, k) =>
     `<div class="tvtile ${k < i ? "read" : ""} ${k === i ? "now" : ""}">${k + 1}</div>`).join("");
   return `${top(v, catChip(v))}<div class="tvbody col">${questionAbove(v)}${promptBlock(v, "small")}<div class="tvtiles">${tiles}</div>
-    <p class="tvsub">Listen to the host 👂 and remember the one you think is true</p></div>`;
+    <p class="tvsub">Listen to the host 👂 and remember the number of the one you think is true</p></div>`;
 }
 
+// Voting: the answer numbers, so everyone can see what to tap on their phone, and who has voted.
 function voting(v) {
   const done = v.voting.filter(p => p.voted).length;
   const chips = v.voting.map(p => `<span class="tvchip ${p.voted ? "done" : ""}">${p.voted ? "✓ " : ""}${esc(p.name)}</span>`).join("");
+  const n = v.choices || 0;
+  const tiles = Array.from({ length: n }, (_, k) => `<div class="tvtile read">${k + 1}</div>`).join("");
   return `${top(v, catChip(v))}<div class="tvbody col">${questionAbove(v)}${promptBlock(v, "small")}
-    <div class="tvbig">Which one is true?</div><p class="tvsub">Type your vote on your phone · ${done} of ${v.voting.length} in</p></div>
+    <div class="tvtiles vote ${n > 10 ? "many" : ""}">${tiles}</div>
+    <p class="tvsub"><b>Which one is true?</b> Tap its number on your phone · ${done} of ${v.voting.length} in</p></div>
     <div class="tvfoot">${chips}</div>`;
 }
 

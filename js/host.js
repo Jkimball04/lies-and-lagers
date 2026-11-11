@@ -19,7 +19,7 @@ let deck = null, cats = [], catById = {};
 let S = null;              // the whole game
 let net = null, tv = null;
 const conns = new Map();   // connection id -> player id
-const ui = { cat: null, draft: null, editCovers: false, wiki: null, selVote: null, netStatus: "starting", saved: null };
+const ui = { cat: null, draft: null, editCovers: false, wiki: null, netStatus: "starting", saved: null };
 let saveTimer = null, tvTimer = null, toastTimer = null, beat = null;
 
 init();
@@ -110,10 +110,10 @@ function onMessage(cid, m) {
       scheduleSave();
     }
   } else if (m.t === "vote" && S.phase === "voting" && r && isVoter(pid)) {
-    const v = r.votes[pid];
-    const text = String(m.text || "").trim().slice(0, 80);
-    if (!v || v.submitted || !text) return;
-    Object.assign(v, { text, submitted: true, sentBack: false, skipped: false, target: null });
+    // A vote is the number of an answer. Players can change it until the host confirms the votes.
+    const v = r.votes[pid], a = r.list.find(x => x.n === Number(m.n));
+    if (!v || v.skipped || !a || a.author === pid) { sendView(pid); return; }
+    Object.assign(v, { submitted: true, target: a.id });
     refresh({ views: [pid] });
   }
 }
@@ -271,7 +271,7 @@ function startRoundFromDraft() {
     entries: {}, list: null, readIndex: 0, votes: {}, points: {}, confirmed: false };
   if (prompt.deckId && !S.used.includes(prompt.deckId)) S.used.push(prompt.deckId);
   S.phase = "writing";
-  Object.assign(ui, { draft: null, editCovers: false, wiki: null, selVote: null });
+  Object.assign(ui, { draft: null, editCovers: false, wiki: null });
   refresh({ views: true });
 }
 
@@ -328,47 +328,21 @@ function moveReading(step) {
 function startVoting() {
   const r = S.round;
   r.votes = {};
-  for (const pid of voters()) r.votes[pid] = { text: "", submitted: false, target: null, sentBack: false, skipped: false, lastText: "" };
+  for (const pid of voters()) r.votes[pid] = { submitted: false, target: null, skipped: false };
   S.phase = "voting";
-  ui.selVote = null;
   refresh({ views: true });
 }
 
-function placeVote(id) {
-  const pid = ui.selVote;
-  if (!pid) return;
-  const r = S.round, a = r.list.find(x => x.id === id), v = r.votes[pid];
-  if (!a || !v || !v.submitted) return;
-  if (a.author === pid) return toast(`That's ${nameOf(pid)}'s own answer, so it can't get their vote. Send the vote back instead.`);
-  v.target = id;
-  ui.selVote = null;
-  refresh({ side: false });
-}
-
-function unplaceVote(pid) {
-  const v = S.round.votes[pid];
-  if (v) v.target = null;
-  if (ui.selVote === pid) ui.selVote = null;
-  refresh({ side: false });
-}
-
-function sendBack(pid) {
-  const v = S.round.votes[pid];
-  if (!v) return;
-  Object.assign(v, { lastText: v.text, text: "", submitted: false, target: null, sentBack: true });
-  if (ui.selVote === pid) ui.selVote = null;
-  refresh({ side: false, views: [pid] });
-}
-
+// For anyone who can't vote (phone died, wandered off). Their phone stops offering the numbers.
 function setSkip(pid, on) {
   const v = S.round.votes[pid];
-  if (v) { v.skipped = on; if (on) v.target = null; }
+  if (v) { v.skipped = on; if (on) { v.target = null; v.submitted = false; } }
   refresh({ side: false, views: [pid] });
 }
 
 function confirmVotes() {
   const r = S.round;
-  if (!voters().every(voteDone)) return toast("Place every vote first, or skip anyone who can't vote.");
+  if (!voters().every(voteDone)) return toast("Wait for everyone's vote, or skip anyone who can't vote.");
   const pts = {};
   const add = (pid, n) => { pts[pid] = (pts[pid] || 0) + n; };
   for (const pid of r.inRound) if (r.entries[pid] && r.entries[pid].correct) add(pid, 1);   // wrote the true answer
@@ -383,7 +357,6 @@ function confirmVotes() {
   r.confirmed = true;
   for (const [pid, n] of Object.entries(pts)) if (S.players[pid]) S.players[pid].score += n;
   S.phase = "novotes"; // first, whose fakes fooled nobody; then the full reveal
-  ui.selVote = null;
   refresh({ views: true });
 }
 
@@ -398,7 +371,7 @@ function showReveal() {
 function nextRound() {
   S.phase = "pick";
   S.round = null;
-  Object.assign(ui, { draft: null, editCovers: false, wiki: null, selVote: null });
+  Object.assign(ui, { draft: null, editCovers: false, wiki: null });
   refresh({ views: true });
 }
 
@@ -463,8 +436,11 @@ function playerView(pid) {
       }
       if (S.phase === "voting") {
         const vt = r.votes[pid];
-        v.canVote = !!vt;
-        if (vt) v.vote = { text: vt.text, submitted: vt.submitted, sentBack: vt.sentBack, lastText: vt.lastText };
+        v.canVote = !!vt && !vt.skipped;
+        if (v.canVote) {
+          const chosen = vt.target && r.list.find(a => a.id === vt.target), mine = r.list.find(a => a.author === pid);
+          v.vote = { count: r.list.length, n: chosen ? chosen.n : null, mine: mine ? mine.n : null };
+        }
       }
       break;
     case "novotes":
@@ -510,7 +486,10 @@ function tvView() {
     view.done = r.inRound.map(pid => ({ name: nameOf(pid), done: !!(r.entries[pid] && (r.entries[pid].submitted || r.entries[pid].correct)) }));
   }
   if (S.phase === "reading") view.reading = { count: r.list.length, index: r.readIndex };
-  if (S.phase === "voting") view.voting = voters().map(pid => ({ name: nameOf(pid), voted: !!(r.votes[pid] && (r.votes[pid].submitted || r.votes[pid].skipped)) }));
+  if (S.phase === "voting") {
+    view.voting = voters().map(pid => ({ name: nameOf(pid), voted: voteDone(pid) }));
+    view.choices = r.list.length;
+  }
   if (S.phase === "novotes") view.novotes = noVoteFakes().map(a => ({ n: a.n, text: a.text, author: nameOf(a.author) }));
   if (S.phase === "reveal") {
     view.reveal = {
@@ -599,7 +578,7 @@ function mainRules() {
         <li>Picture questions have two parts, like who it is <i>and</i> what they're known for. Answer both.</li>
         <li>Spelling doesn't matter. Answers never go up on the screen before the vote, and you read them all out in your own words.</li>
         <li>Anyone who writes the real answer gets a point and skips the vote. You mark it correct while they're writing.</li>
-        <li>Phones only show the answer and vote boxes. Everything else is on the TV.</li>
+        <li>Phones only show the answer box and, for voting, the answer numbers. Everything else is on the TV.</li>
       </ul></div>
     <div class="actions"><button class="btn ghost" data-act="back-lobby">◀ Back to the lobby</button>
       <button class="btn big" data-act="lets-play">Let's play →</button></div></section>`;
@@ -727,44 +706,33 @@ function mainReading() {
         : `<button class="btn big" data-act="read-next">Next answer ▶</button>`}</div></section>`;
 }
 
-function voteChip(pid, placed) {
-  const v = S.round.votes[pid];
-  return `<span class="vchip ${ui.selVote === pid ? "sel" : ""}">
-    <button class="vsel" data-act="sel-vote" data-pid="${pid}" aria-label="${esc(nameOf(pid))}'s vote: ${esc(v.text)}"><b>${esc(nameOf(pid))}:</b> “${esc(v.text)}”</button>
-    ${placed ? `<button class="tiny-x" data-act="unplace" data-pid="${pid}" aria-label="Unplace ${esc(nameOf(pid))}'s vote">↩ Unplace</button>` : ""}
-    <button class="tiny-x" data-act="send-back" data-pid="${pid}" aria-label="Send back ${esc(nameOf(pid))}'s vote">Send back</button></span>`;
-}
-
+// Players vote by tapping an answer's number on their phone; each name shows up under its answer as it comes in.
 function mainVoting() {
-  const r = S.round, vs = voters(), sel = ui.selVote, pr = r.prompt;
-  const placedOn = {};
-  for (const pid of vs) { const v = r.votes[pid]; if (v && v.submitted && v.target) (placedOn[v.target] = placedOn[v.target] || []).push(pid); }
+  const r = S.round, vs = voters(), pr = r.prompt;
   const answers = r.list.map(a => {
-    const own = sel && a.author === sel;
-    const chips = (placedOn[a.id] || []).map(pid => voteChip(pid, true)).join("");
-    return `<div class="vans ${sel && !own ? "target" : ""} ${own ? "own" : ""} ${a.isTrue ? "is-true" : ""}" data-act="${sel && !own ? "place" : ""}" data-id="${a.id}">
+    const tags = votersFor(a.id).map(pid => `<span class="vname ${a.isTrue ? "good" : ""}">${esc(nameOf(pid))}</span>`).join("");
+    return `<div class="vans ${a.isTrue ? "is-true" : ""}">
       <div class="vhead"><span class="num">${a.n}</span><span class="txt">${esc(a.text)}</span>
         <span class="who">${a.isTrue ? `<b class="true">★ TRUE</b>` : esc(nameOf(a.author))}</span></div>
-      <div class="placed">${chips || `<span class="small muted">No votes yet</span>`}</div></div>`;
+      <div class="placed">${tags || `<span class="small muted">No votes yet</span>`}</div></div>`;
   }).join("");
-  const waiting = vs.filter(pid => { const v = r.votes[pid]; return v && v.submitted && !v.target && !v.skipped; });
-  const notYet = vs.filter(pid => { const v = r.votes[pid]; return v && !v.submitted && !v.skipped; });
+  const notYet = vs.filter(pid => r.votes[pid] && !r.votes[pid].skipped && !voteDone(pid));
   const skipped = vs.filter(pid => r.votes[pid] && r.votes[pid].skipped);
   const sitting = r.inRound.filter(pid => !isVoter(pid));
   const done = vs.filter(voteDone).length;
   return `<section class="voting">${questionBar(pr)}
     <div class="vcols">
-    <div><h2>Match each vote to an answer</h2>
-      <p class="muted">${sel ? `Now tap the answer <b>${esc(nameOf(sel))}</b> means.` : "Tap a vote on the right, then tap the answer it means."}</p>${answers}</div>
-    <aside class="tray"><h3>Votes to place</h3>
-      ${waiting.map(pid => voteChip(pid, false)).join("") || `<p class="small muted">${notYet.length ? "Waiting for votes…" : "All placed."}</p>`}
-      ${notYet.length ? `<h3>Still voting</h3><ul class="still">${notYet.map(pid => `<li><span>${esc(nameOf(pid))}${r.votes[pid].sentBack ? ` <span class="tag">sent back</span>` : ""}</span>
-        <button class="btn tiny ghost" data-act="skip" data-pid="${pid}" title="Leave ${esc(nameOf(pid))} out of this vote">Skip</button></li>`).join("")}</ul>` : ""}
+    <div><h2>The votes</h2>
+      <p class="muted">Players tap a number on their phone, and their name shows up under that answer. They can change their vote until you confirm.</p>${answers}</div>
+    <aside class="tray"><h3>Still voting</h3>
+      ${notYet.length ? `<ul class="still">${notYet.map(pid => `<li><span>${esc(nameOf(pid))}</span>
+        <button class="btn tiny ghost" data-act="skip" data-pid="${pid}" title="Leave ${esc(nameOf(pid))} out of this vote">Skip</button></li>`).join("")}</ul>`
+        : `<p class="small muted">Everyone's voted.</p>`}
       ${skipped.length ? `<h3>Skipped</h3><ul class="still">${skipped.map(pid => `<li><span>${esc(nameOf(pid))}</span>
         <button class="btn tiny ghost" data-act="unskip" data-pid="${pid}">Undo</button></li>`).join("")}</ul>` : ""}
       ${sitting.length ? `<p class="small muted">Not voting (wrote the true answer): ${esc(listNames(sitting.map(nameOf)))}</p>` : ""}
     </aside></div>
-    <div class="actions"><span class="muted">${done} of ${vs.length} votes placed</span>
+    <div class="actions"><span class="muted">${done} of ${vs.length} votes in</span>
       <button class="btn big" data-act="confirm-votes" ${done === vs.length ? "" : "disabled"}>Confirm votes ✓</button></div></section>`;
 }
 
@@ -847,10 +815,6 @@ function onClick(e) {
     "read-prev": () => moveReading(-1),
     "read-restart": () => { S.round.readIndex = 0; refresh({ side: false }); },
     "start-voting": startVoting,
-    "sel-vote": () => { ui.selVote = ui.selVote === d.pid ? null : d.pid; renderMain(); },
-    place: () => placeVote(d.id),
-    unplace: () => unplaceVote(d.pid),
-    "send-back": () => sendBack(d.pid),
     skip: () => setSkip(d.pid, true),
     unskip: () => setSkip(d.pid, false),
     "confirm-votes": confirmVotes,

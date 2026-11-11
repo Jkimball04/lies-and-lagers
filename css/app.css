@@ -157,9 +157,6 @@ details summary { cursor: pointer; color: var(--muted); margin: .7em 0 .3em; }
 .qbar .pic-frame img { max-height: 110px; }
 .vcols { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
 .vans { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
-.vans.target { cursor: pointer; border-color: var(--amber); border-style: dashed; }
-.vans.target:hover { background: var(--panel2); }
-.vans.own { opacity: .4; }
 .vans.is-true { border-left: 4px solid var(--true); }
 .vhead { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 10px; align-items: center; }
 .vhead .num { font-family: var(--display); color: var(--amber); font-size: 1.3rem; text-align: center; }
@@ -167,13 +164,6 @@ details summary { cursor: pointer; color: var(--muted); margin: .7em 0 .3em; }
 .placed { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 0 46px; }
 .tray { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; position: sticky; top: 76px; }
 .tray h3 { margin: .2em 0 .5em; font-size: 1rem; }
-.vchip { display: inline-flex; align-items: center; background: var(--panel2); border: 1px solid var(--line);
-  border-radius: 999px; padding: 2px; margin: 3px 0; max-width: 100%; }
-.vchip.sel { border-color: var(--amber); box-shadow: 0 0 0 2px var(--amber); }
-.vsel { background: none; border: 0; cursor: pointer; padding: .3em .6em; text-align: left; overflow-wrap: anywhere; }
-.tiny-x { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: .75rem; padding: .2em .6em;
-  border-left: 1px solid var(--line); white-space: nowrap; }
-.tiny-x:hover { color: var(--amber2); }
 .still { list-style: none; padding: 0; margin: 0 0 10px; }
 .still li { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 4px 0; }
 
@@ -222,6 +212,9 @@ body.tv { overflow: hidden; height: 100vh; background: radial-gradient(ellipse a
   font-family: var(--display); font-size: 5.5vw; background: var(--panel); color: #5d4a37; border: .3vw solid var(--line); transition: all .25s; }
 .tvtile.read { color: var(--foam); border-color: var(--amber); background: var(--panel2); }
 .tvtile.now { background: var(--amber); color: #2a1606; transform: scale(1.12); box-shadow: 0 0 6vw rgba(242, 165, 65, .45); }
+.tvtiles.vote { gap: 1.4vw; }
+.tvtiles.vote .tvtile { width: 7vw; height: 7vw; font-size: 3.8vw; border-radius: 1.4vw; }
+.tvtiles.vote.many .tvtile { width: 5.2vw; height: 5.2vw; font-size: 2.8vw; border-radius: 1vw; }
 .tvsub { font-size: 2.2vw; color: var(--muted); text-align: center; margin: 0; }
 .tvbig { font-family: var(--display); font-size: 5vw; color: var(--foam); text-align: center; line-height: 1.1; }
 .tvreveal { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 3vw; align-items: center; width: 100%; height: 100%; }
@@ -303,6 +296,14 @@ body.tv { overflow: hidden; height: 100vh; background: radial-gradient(ellipse a
 .alert { background: #3a2a10; border: 1px solid var(--amber); color: var(--amber2); padding: 10px 12px; border-radius: 10px; margin: 10px 0; font-weight: 600; }
 .phdelta { font-family: var(--display); font-size: 3.2rem; color: var(--amber2); margin: .1em 0; line-height: 1; }
 .ph .rules-list li { font-size: 1rem; }
+/* Voting on a phone: one big button per answer number */
+.numgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 12px; margin-top: 16px; }
+.numbtn { aspect-ratio: 1; border-radius: 18px; border: 2px solid var(--line); background: var(--panel); color: var(--foam);
+  font-family: var(--display); font-size: 2.4rem; line-height: 1; cursor: pointer; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; touch-action: manipulation; }
+.numbtn.on { background: var(--amber); color: #2a1606; border-color: var(--amber); box-shadow: 0 0 0 3px rgba(242, 165, 65, .35); }
+.numbtn:disabled { opacity: .35; cursor: not-allowed; }
+.numbtn small { font-family: var(--body); font-size: .75rem; margin-top: 4px; }
 .join h1 { font-family: var(--display); font-weight: 400; color: var(--amber); font-size: 2.6rem; line-height: 1; margin: .8em 0 .2em; }
 .join h1 span { color: var(--foam); }
 .join input[name="room"] { text-transform: uppercase; letter-spacing: .2em; font-weight: 700; }

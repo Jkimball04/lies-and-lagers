@@ -45,7 +45,7 @@ const catChip = v => (v.category ? `<div class="tvcat">${esc(v.category.name)}</
 function render() {
   const v = view;
   if (!v) return;
-  const fn = { lobby, rules, pick: between, writing, reading, voting, reveal, scores, final: scores }[v.phase];
+  const fn = { lobby, rules, pick: between, writing, reading, voting, novotes, reveal, scores, final: scores }[v.phase];
   app.innerHTML = fn ? fn(v) : "";
 }
 
@@ -114,19 +114,40 @@ function voting(v) {
     <div class="tvfoot">${chips}</div>`;
 }
 
+// After the votes: whose fakes fooled nobody. The true answer is never listed, so nothing is given away.
+function novotes(v) {
+  const list = v.novotes || [];
+  const q = v.prompt.question || v.prompt.display;
+  const body = list.length
+    ? `<div class="tvbig">Nobody fell for…</div>
+       <div class="tvflops ${list.length <= 2 ? "few" : list.length > 6 ? "many" : ""}">${list.map(a => `<div class="tvflop"><span class="n">${a.n}</span>
+         <span class="who">${esc(a.author)}</span><span class="t">“${esc(a.text)}”</span></div>`).join("")}</div>`
+    : `<div class="tvbig">Every fake fooled somebody! 🎉</div>`;
+  return `${top(v, catChip(v))}<div class="tvbody col">${q ? `<div class="tvq small">${esc(q)}</div>` : ""}${body}</div>`;
+}
+
 function reveal(v) {
   const R = v.reveal;
   const left = R.image
     ? `<div><div class="tvpic">${pictureHTML(R.image, { covered: false })}</div>
         <p class="tvcredit">Picture: ${esc(R.image.credit || "unknown")}${R.image.license ? " · " + esc(R.image.license) : ""} · via Wikipedia</p></div>`
     : `<div class="tvprompt small">${esc(v.prompt.display)}</div>`;
-  const rows = R.answers.map(a => `<li class="${a.isTrue ? "true" : ""}"><span class="n">${a.n}</span>
+  // Shrink everything a little when there are lots of answers, so they all fit on the screen.
+  const n = R.answers.length;
+  const k = n <= 5 ? 1 : n <= 7 ? 0.88 : n <= 9 ? 0.76 : n <= 12 ? 0.64 : 0.56;
+  const rows = R.answers.map(a => {
+    const tags = a.pickers.map(name => `<span class="tvvote">${esc(name)}</span>`).join("");
+    const votes = a.pickers.length ? `<span class="lbl">${a.isTrue ? "found by" : "fooled"}</span>${tags}`
+      : `<span class="lbl">${a.isTrue ? "nobody found it" : "fooled nobody"}</span>`;
+    return `<li class="${a.isTrue ? "true" : ""}"><span class="n">${a.n}</span>
       <span class="t">${esc(a.text)}</span>
-      <span class="m">${a.isTrue ? `<b class="true">★ The true answer</b>` : `by <b>${esc(a.author)}</b>`} ·
-        ${a.pickers.length ? `picked by ${esc(listNames(a.pickers))}` : "no votes"}</span></li>`).join("");
+      <span class="m"><span class="by">${a.isTrue ? `<b class="true">★ The true answer</b>` : `by <b>${esc(a.author)}</b>`}</span>
+        <span class="votes">${votes}</span></span></li>`;
+  }).join("");
   const extra = R.correctWriters.length ? `<p class="tvsub">${esc(listNames(R.correctWriters))} wrote the true answer! +1</p>` : "";
   const pts = R.points.length ? `<p class="tvsub">${R.points.map(p => `${esc(p.name)} +${p.n}`).join(" · ")}</p>` : "";
-  return `${top(v, catChip(v))}<div class="tvbody"><div class="tvreveal">${left}<div><ol class="tvans">${rows}</ol>${extra}${pts}</div></div></div>`;
+  return `${top(v, catChip(v))}<div class="tvbody"><div class="tvreveal">${left}
+    <div style="--k:${k}"><ol class="tvans">${rows}</ol><div class="tvrevfoot">${extra}${pts}</div></div></div></div>`;
 }
 
 function board(list) {

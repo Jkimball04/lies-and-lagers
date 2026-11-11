@@ -103,6 +103,7 @@ function onMessage(cid, m) {
     e.text = String(m.text || "").slice(0, 160);
     if (m.t === "submit" && e.text.trim()) {
       e.submitted = true;
+      e.sentBack = false;
       refresh({ views: [pid] });
     } else {
       updateWritingCard(pid);
@@ -291,6 +292,15 @@ function toggleCorrect(pid) {
   refresh({ views: [pid] });
 }
 
+// Reopen a player's answer box (their answer stays in it) so they can change it and send it again.
+function sendBackAnswer(pid) {
+  const e = S.round && S.round.entries[pid];
+  if (S.phase !== "writing" || !e || !e.submitted || e.correct) return;
+  e.submitted = false;
+  e.sentBack = true;
+  refresh({ views: [pid] });
+}
+
 function startReading() {
   const r = S.round, list = [];
   for (const pid of r.inRound) {
@@ -372,8 +382,16 @@ function confirmVotes() {
   r.points = pts;
   r.confirmed = true;
   for (const [pid, n] of Object.entries(pts)) if (S.players[pid]) S.players[pid].score += n;
-  S.phase = "reveal";
+  S.phase = "novotes"; // first, whose fakes fooled nobody; then the full reveal
   ui.selVote = null;
+  refresh({ views: true });
+}
+
+// Fakes that nobody voted for. The true answer is never in this list, so it doesn't give anything away.
+const noVoteFakes = () => S.round.list.filter(a => !a.isTrue && !votersFor(a.id).length);
+
+function showReveal() {
+  S.phase = "reveal";
   refresh({ views: true });
 }
 
@@ -441,13 +459,17 @@ function playerView(pid) {
       v.phase = S.phase;
       if (S.phase === "writing") {
         const e = r.entries[pid] || {};
-        v.answer = { text: e.text || "", submitted: !!(e.submitted || e.correct) };
+        v.answer = { text: e.text || "", submitted: !!(e.submitted || e.correct), sentBack: !!e.sentBack && !e.submitted && !e.correct };
       }
       if (S.phase === "voting") {
         const vt = r.votes[pid];
         v.canVote = !!vt;
         if (vt) v.vote = { text: vt.text, submitted: vt.submitted, sentBack: vt.sentBack, lastText: vt.lastText };
       }
+      break;
+    case "novotes":
+      v.phase = inR ? "novotes" : "between";
+      v.score = p.score - ((r && r.points[pid]) || 0); // keep this round's points a surprise until the reveal
       break;
     case "reveal": v.phase = inR ? "reveal" : "between"; if (inR) v.result = resultFor(pid); break;
     case "scores": v.phase = "scores"; break;
@@ -476,7 +498,7 @@ function tvView() {
     room: S.room, joinUrl: joinUrl(S.room), phase: S.phase, round: S.roundNo, total: totalRounds(),
     players: S.order.map(pid => ({ name: nameOf(pid), connected: S.players[pid].connected })),
   };
-  if (r && ["writing", "reading", "voting", "reveal"].includes(S.phase)) {
+  if (r && ["writing", "reading", "voting", "novotes", "reveal"].includes(S.phase)) {
     view.category = { name: catName(r.prompt.category) };
     view.prompt = {
       question: r.prompt.question,
@@ -489,6 +511,7 @@ function tvView() {
   }
   if (S.phase === "reading") view.reading = { count: r.list.length, index: r.readIndex };
   if (S.phase === "voting") view.voting = voters().map(pid => ({ name: nameOf(pid), voted: !!(r.votes[pid] && (r.votes[pid].submitted || r.votes[pid].skipped)) }));
+  if (S.phase === "novotes") view.novotes = noVoteFakes().map(a => ({ n: a.n, text: a.text, author: nameOf(a.author) }));
   if (S.phase === "reveal") {
     view.reveal = {
       answers: r.list.map(a => ({ n: a.n, text: a.text, isTrue: a.isTrue, author: a.author ? nameOf(a.author) : null, pickers: votersFor(a.id).map(nameOf) })),
@@ -507,7 +530,7 @@ function tvView() {
 
 const brandHTML = () => `<div class="brand">Lies <span>&amp;</span> Lagers</div>`;
 const STEPS = [["lobby", "Lobby"], ["rules", "How to play"], ["pick", "Pick a prompt"], ["writing", "Writing"], ["reading", "Reading"],
-  ["voting", "Voting"], ["reveal", "Reveal"], ["scores", "Scores"]];
+  ["voting", "Voting"], ["novotes", "No votes"], ["reveal", "Reveal"], ["scores", "Scores"]];
 const NET_LABEL = { online: "● Ready for players", starting: "Starting…", reconnecting: "Reconnecting…",
   "waiting-for-code": "Getting the room ready…" };
 
@@ -543,7 +566,7 @@ function renderSide() {
 function renderMain() {
   if (!S) return;
   const fn = { lobby: mainLobby, rules: mainRules, pick: mainPick, writing: mainWriting, reading: mainReading, voting: mainVoting,
-    reveal: mainReveal, scores: mainScores, final: mainFinal }[S.phase];
+    novotes: mainNoVotes, reveal: mainReveal, scores: mainScores, final: mainFinal }[S.phase];
   $("#main").innerHTML = fn();
   if (S.phase === "pick" && ui.draft && ui.draft.image && ui.editCovers) {
     const frame = document.querySelector(".draft .pic-frame");
@@ -651,12 +674,14 @@ function writingCard(pid) {
   const p = S.players[pid], e = S.round.entries[pid] || {};
   const status = e.correct ? `<span class="tag good">Marked correct · won't be read out</span>`
     : e.submitted ? `<span class="tag ok">✓ Sent</span>`
+    : e.sentBack ? `<span class="tag warn">Sent back</span>`
     : e.text ? `<span class="tag">typing…</span>`
     : `<span class="tag">${p && p.connected ? "nothing yet" : "not connected"}</span>`;
   return `<div class="card wcard ${e.correct ? "correct" : ""}" data-pid="${pid}">
     <div class="wtop"><b>${esc(nameOf(pid))}</b>${status}</div>
     <p class="draft-text">${esc(e.text || "")}</p>
-    <button class="btn tiny ${e.correct ? "" : "ghost"}" data-act="mark-correct" data-pid="${pid}">${e.correct ? "Undo “correct”" : "Mark as correct"}</button></div>`;
+    <div class="wbtns"><button class="btn tiny ${e.correct ? "" : "ghost"}" data-act="mark-correct" data-pid="${pid}">${e.correct ? "Undo “correct”" : "Mark as correct"}</button>
+      ${e.submitted && !e.correct ? `<button class="btn tiny ghost" data-act="send-back-answer" data-pid="${pid}" aria-label="Send back ${esc(nameOf(pid))}'s answer">↩ Send back</button>` : ""}</div></div>`;
 }
 
 function updateWritingCard(pid) {
@@ -743,13 +768,26 @@ function mainVoting() {
       <button class="btn big" data-act="confirm-votes" ${done === vs.length ? "" : "disabled"}>Confirm votes ✓</button></div></section>`;
 }
 
+function mainNoVotes() {
+  const r = S.round, flops = noVoteFakes();
+  const rows = flops.map(a => `<li class="ans"><span class="num">${a.n}</span><span class="txt">${esc(a.text)}</span>
+      <span class="who"><b class="vname">${esc(nameOf(a.author))}</b></span></li>`).join("");
+  return `<section class="novotes">${questionBar(r.prompt)}<h2>Nobody fell for… <span class="muted small">(showing on the TV)</span></h2>
+    ${flops.length
+      ? `<p class="muted">Read out whose answers these were. Nobody voted for them, so they score nothing for their fakes this round.</p><ol class="answers">${rows}</ol>`
+      : `<p class="read big">Every fake fooled somebody!</p>`}
+    <div class="actions"><button class="btn big" data-act="show-reveal">Reveal the answers →</button></div></section>`;
+}
+
 function mainReveal() {
   const r = S.round;
   const rows = r.list.map(a => {
     const pickers = votersFor(a.id).map(nameOf);
+    const tags = pickers.map(n => `<span class="vname ${a.isTrue ? "good" : ""}">${esc(n)}</span>`).join("");
     return `<li class="ans ${a.isTrue ? "is-true" : ""}"><span class="num">${a.n}</span><span class="txt">${esc(a.text)}</span>
       <span class="who">${a.isTrue ? `<b class="true">★ TRUE</b>` : esc(nameOf(a.author))}</span>
-      <span class="picks">${pickers.length ? `Picked by ${esc(listNames(pickers))}` : "No votes"}</span></li>`;
+      <span class="picks">${pickers.length ? `<span class="lbl">${a.isTrue ? "Found by" : "Fooled"}</span>${tags}`
+        : `<span class="lbl">${a.isTrue ? "Nobody found it" : "Fooled nobody"}</span>`}</span></li>`;
   }).join("");
   const pts = Object.entries(r.points).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1])
     .map(([pid, n]) => `<li>${esc(nameOf(pid))} <b>+${n}</b></li>`).join("");
@@ -802,6 +840,7 @@ function onClick(e) {
     "no-picture": () => { ui.draft.image = null; ui.editCovers = false; renderMain(); },
     "start-round": startRoundFromDraft,
     "mark-correct": () => toggleCorrect(d.pid),
+    "send-back-answer": () => sendBackAnswer(d.pid),
     "cancel-round": cancelRound,
     "start-reading": startReading,
     "read-next": () => moveReading(1),
@@ -815,6 +854,7 @@ function onClick(e) {
     skip: () => setSkip(d.pid, true),
     unskip: () => setSkip(d.pid, false),
     "confirm-votes": confirmVotes,
+    "show-reveal": showReveal,
     "show-scores": () => { S.phase = "scores"; refresh({ views: true }); },
     "next-round": nextRound,
     "end-game": endGame,

@@ -104,7 +104,7 @@ function render(force = false) {
   if (!joined) return;
   const v = view;
   // Only redraw when something that matters changed, so we never wipe what someone is typing.
-  const key = v ? [v.phase, v.round, v.score, v.rank, v.answer && v.answer.submitted, v.canVote,
+  const key = v ? [v.phase, v.round, v.score, v.rank, v.answer && v.answer.submitted, v.answer && v.answer.sentBack, v.canVote,
     v.vote && v.vote.submitted, v.vote && v.vote.sentBack].join("|") : "none";
   if (!force && key === renderedKey) return;
   const ta = document.getElementById("ans");
@@ -138,7 +138,8 @@ function body(v) {
       if (v.answer && v.answer.submitted) {
         return `${cat}<p class="phbig">Answer sent ✓</p><p class="muted">Now look innocent.</p><div class="phsent">${esc(v.answer.text)}</div>`;
       }
-      return `${cat}<p class="phbig">Make up an answer that sounds true</p><p class="muted">Listen to the host for the question.</p>
+      return `${cat}${v.answer && v.answer.sentBack ? `<p class="alert">The host sent your answer back. Change it, then send it again.</p>` : ""}
+        <p class="phbig">Make up an answer that sounds true</p><p class="muted">Listen to the host for the question.</p>
         <textarea id="ans" maxlength="160" placeholder="Type your answer…" autocomplete="off"></textarea>
         <button class="btn big" id="send" type="button">Send answer</button>
         <p class="phnote">The host can see your answer as you type it.</p>`;
@@ -153,6 +154,8 @@ function body(v) {
         <p class="phbig">Which answer is true?</p><p class="muted">Type a word or two so the host knows which answer you mean.</p>
         <input id="vote" maxlength="80" placeholder="e.g. the swamp one" autocomplete="off">
         <button class="btn big" id="sendvote" type="button">Send vote</button>`;
+    case "novotes":
+      return `${cat}<p class="phbig">Eyes on the TV 👀</p><p class="muted">The votes are in. The reveal is coming up.</p>`;
     case "reveal": {
       const r = v.result || {};
       const lines = [];
